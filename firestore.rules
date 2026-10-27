@@ -1,0 +1,344 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Pillar 4.1: Global Safety Net (Default-Deny Catch-All)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Phase 3: Primitive Definitions
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidCategorySlug(slug) {
+      return slug is string && slug.size() >= 2 && slug.size() <= 64 && slug in [
+        'wpda',
+        'physical-wellness',
+        'music',
+        'engineering',
+        'business',
+        'content-creating',
+        'art',
+        'interpersonal-skill',
+        'exploration-adaptation',
+        'critical-thinking-logic'
+      ];
+    }
+
+    // Pillar 2: Validation Blueprints (Anti-Update-Gap)
+    function isValidUserAccount(data) {
+      return data.keys().hasAll([
+        'userId',
+        'device',
+        'sparks',
+        'auroraEnabled',
+        'onboardingDismissed',
+        'theme',
+        'colorStyle',
+        'renderQuality',
+        'reducedMotion',
+        'fallback2D',
+        'activeQuoteIndex',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'userId',
+        'device',
+        'sparks',
+        'auroraEnabled',
+        'onboardingDismissed',
+        'theme',
+        'colorStyle',
+        'renderQuality',
+        'reducedMotion',
+        'fallback2D',
+        'activeQuoteIndex',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+      data.userId.matches('^[a-zA-Z0-9_\\-]+$') &&
+      data.userId == request.auth.uid &&
+      data.device is string && data.device.size() >= 1 && data.device.size() <= 64 &&
+      data.sparks is int && data.sparks >= 0 && data.sparks <= 1000000 &&
+      data.auroraEnabled is bool &&
+      data.onboardingDismissed is bool &&
+      data.theme is string && data.theme.size() <= 16 && data.theme in ['light', 'dark'] &&
+      data.colorStyle is string && data.colorStyle.size() <= 16 && data.colorStyle in ['serious', 'vibrant'] &&
+      data.renderQuality is string && data.renderQuality.size() <= 24 && data.renderQuality in ['mobile-light', 'balanced', 'high'] &&
+      data.reducedMotion is bool &&
+      data.fallback2D is bool &&
+      data.activeQuoteIndex is int && data.activeQuoteIndex >= 0 && data.activeQuoteIndex <= 100 &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidUserPrivateInfo(data) {
+      return data.keys().hasAll(['userId', 'email', 'createdAt', 'updatedAt']) &&
+      data.keys().hasOnly(['userId', 'email', 'createdAt', 'updatedAt']) &&
+      data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+      data.userId.matches('^[a-zA-Z0-9_\\-]+$') &&
+      data.userId == request.auth.uid &&
+      data.email is string && data.email.size() >= 3 && data.email.size() <= 254 &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidCategoryProfile(data) {
+      return data.keys().hasAll([
+        'userId',
+        'categorySlug',
+        'level',
+        'nodeLevels',
+        'nodeChecklists',
+        'assessmentNote',
+        'capabilityNotes',
+        'meaningText',
+        'potentialText',
+        'version',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'userId',
+        'categorySlug',
+        'level',
+        'nodeLevels',
+        'nodeChecklists',
+        'assessmentNote',
+        'capabilityNotes',
+        'meaningText',
+        'potentialText',
+        'version',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+      data.userId.matches('^[a-zA-Z0-9_\\-]+$') &&
+      data.userId == request.auth.uid &&
+      isValidCategorySlug(data.categorySlug) &&
+      (data.level == null || (data.level is int && data.level >= 1 && data.level <= 5)) &&
+      data.nodeLevels is map && data.nodeLevels.size() <= 24 &&
+      data.nodeChecklists is map && data.nodeChecklists.size() <= 24 &&
+      data.assessmentNote is string && data.assessmentNote.size() <= 1000 &&
+      data.capabilityNotes is string && data.capabilityNotes.size() <= 5000 &&
+      data.meaningText is string && data.meaningText.size() <= 10000 &&
+      data.potentialText is string && data.potentialText.size() <= 10000 &&
+      data.version is int && data.version >= 1 && data.version <= 1000000 &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidEvidenceItem(data) {
+      return data.keys().hasAll([
+        'id',
+        'userId',
+        'categorySlug',
+        'title',
+        'summary',
+        'itemType',
+        'occurredOn',
+        'externalUrl',
+        'usedNodeIds',
+        'assetRefKey',
+        'assetKey',
+        'assetName',
+        'assetMime',
+        'sortOrder',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id',
+        'userId',
+        'categorySlug',
+        'title',
+        'summary',
+        'itemType',
+        'occurredOn',
+        'externalUrl',
+        'usedNodeIds',
+        'assetRefKey',
+        'assetKey',
+        'assetName',
+        'assetMime',
+        'sortOrder',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+      data.id.matches('^[a-zA-Z0-9_\\-]+$') &&
+      data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+      data.userId.matches('^[a-zA-Z0-9_\\-]+$') &&
+      data.userId == request.auth.uid &&
+      isValidCategorySlug(data.categorySlug) &&
+      data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+      data.summary is string && data.summary.size() <= 2000 &&
+      data.itemType is string && data.itemType.size() <= 32 && data.itemType in ['project', 'experience', 'document', 'visual', 'link'] &&
+      data.occurredOn is string && data.occurredOn.size() <= 32 &&
+      data.externalUrl is string && data.externalUrl.size() <= 500 && data.externalUrl.matches('^(|https://.+)$') &&
+      data.usedNodeIds is list && data.usedNodeIds.size() <= 18 &&
+      (data.usedNodeIds.size() == 0 || (data.usedNodeIds[0] is int && data.usedNodeIds[0] >= 0 && data.usedNodeIds[0] <= 17)) &&
+      data.assetRefKey is string && data.assetRefKey.size() <= 200 &&
+      data.assetKey is string && data.assetKey.size() <= 200 &&
+      data.assetName is string && data.assetName.size() <= 200 &&
+      data.assetMime is string && data.assetMime.size() <= 100 &&
+      data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 10000 &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    // Collection 1: /users/{userId}
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId) && existing().userId == request.auth.uid;
+      allow list: if isOwner(userId) && resource.data.userId == request.auth.uid;
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUserAccount(incoming()) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isOwner(userId) && isValidId(userId) && isValidUserAccount(incoming()) &&
+        incoming().userId == existing().userId &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'device',
+            'sparks',
+            'auroraEnabled',
+            'onboardingDismissed',
+            'theme',
+            'colorStyle',
+            'renderQuality',
+            'reducedMotion',
+            'fallback2D',
+            'activeQuoteIndex',
+            'updatedAt'
+          ])
+        );
+      allow delete: if isOwner(userId) && isValidId(userId) && existing().userId == request.auth.uid;
+
+      // Collection 2: /users/{userId}/private/{infoId} (PII Split Collection)
+      match /private/{infoId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(infoId) &&
+          existing().userId == request.auth.uid &&
+          get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+        allow list: if isOwner(userId) && resource.data.userId == request.auth.uid;
+        allow create: if isOwner(userId) && isValidId(userId) && isValidId(infoId) &&
+          isValidUserPrivateInfo(incoming()) &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          exists(/databases/$(database)/documents/users/$(userId)) &&
+          get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+        allow update: if isOwner(userId) && isValidId(userId) && isValidId(infoId) &&
+          isValidUserPrivateInfo(incoming()) &&
+          incoming().userId == existing().userId &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['email', 'updatedAt']) &&
+          get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(infoId) &&
+          existing().userId == request.auth.uid &&
+          get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+      }
+
+      // Collection 3: /users/{userId}/categoryProfiles/{categorySlug}
+      match /categoryProfiles/{categorySlug} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidCategorySlug(categorySlug) &&
+          existing().userId == request.auth.uid &&
+          get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+        allow list: if isOwner(userId) && resource.data.userId == request.auth.uid;
+        allow create: if isOwner(userId) && isValidId(userId) && isValidCategorySlug(categorySlug) &&
+          isValidCategoryProfile(incoming()) &&
+          incoming().categorySlug == categorySlug &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          exists(/databases/$(database)/documents/users/$(userId)) &&
+          get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+        allow update: if isOwner(userId) && isValidId(userId) && isValidCategorySlug(categorySlug) &&
+          isValidCategoryProfile(incoming()) &&
+          incoming().userId == existing().userId &&
+          incoming().categorySlug == existing().categorySlug &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          (
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'level',
+              'nodeLevels',
+              'nodeChecklists',
+              'assessmentNote',
+              'capabilityNotes',
+              'meaningText',
+              'potentialText',
+              'version',
+              'updatedAt'
+            ])
+          ) &&
+          get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidCategorySlug(categorySlug) &&
+          existing().userId == request.auth.uid &&
+          get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+
+        // Collection 4: /users/{userId}/categoryProfiles/{categorySlug}/evidence/{evidenceId}
+        match /evidence/{evidenceId} {
+          allow get: if isOwner(userId) && isValidId(userId) && isValidCategorySlug(categorySlug) && isValidId(evidenceId) &&
+            existing().userId == request.auth.uid &&
+            get(/databases/$(database)/documents/users/$(userId)/categoryProfiles/$(categorySlug)).data.userId == request.auth.uid;
+          allow list: if isOwner(userId) && resource.data.userId == request.auth.uid;
+          allow create: if isOwner(userId) && isValidId(userId) && isValidCategorySlug(categorySlug) && isValidId(evidenceId) &&
+            isValidEvidenceItem(incoming()) &&
+            incoming().id == evidenceId &&
+            incoming().categorySlug == categorySlug &&
+            incoming().createdAt == request.time &&
+            incoming().updatedAt == request.time &&
+            exists(/databases/$(database)/documents/users/$(userId)/categoryProfiles/$(categorySlug)) &&
+            get(/databases/$(database)/documents/users/$(userId)/categoryProfiles/$(categorySlug)).data.userId == request.auth.uid;
+          allow update: if isOwner(userId) && isValidId(userId) && isValidCategorySlug(categorySlug) && isValidId(evidenceId) &&
+            isValidEvidenceItem(incoming()) &&
+            incoming().id == existing().id &&
+            incoming().userId == existing().userId &&
+            incoming().categorySlug == existing().categorySlug &&
+            incoming().createdAt == existing().createdAt &&
+            incoming().updatedAt == request.time &&
+            (
+              incoming().diff(existing()).affectedKeys().hasOnly([
+                'title',
+                'summary',
+                'itemType',
+                'occurredOn',
+                'externalUrl',
+                'usedNodeIds',
+                'assetRefKey',
+                'assetKey',
+                'assetName',
+                'assetMime',
+                'sortOrder',
+                'updatedAt'
+              ])
+            ) &&
+            get(/databases/$(database)/documents/users/$(userId)/categoryProfiles/$(categorySlug)).data.userId == request.auth.uid;
+          allow delete: if isOwner(userId) && isValidId(userId) && isValidCategorySlug(categorySlug) && isValidId(evidenceId) &&
+            existing().userId == request.auth.uid &&
+            get(/databases/$(database)/documents/users/$(userId)/categoryProfiles/$(categorySlug)).data.userId == request.auth.uid;
+        }
+      }
+    }
+  }
+}

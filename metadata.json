@@ -1,0 +1,6 @@
+{
+  "name": "THE BACKPACK — Personal Skill Atlas RPG",
+  "description": "Personal Skill Atlas RPG 3D interaktif dengan 10 Core Domains, Peta Prasasti Skill Tree, dan portofolio bukti karya.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

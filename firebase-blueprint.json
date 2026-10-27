@@ -1,0 +1,348 @@
+{
+  "entities": {
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "User account preferences, explorer sparks, and device metadata.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner Firebase Auth UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "device": {
+          "type": "string",
+          "description": "Current device label (e.g., Laptop A, Ponsel B).",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "sparks": {
+          "type": "number",
+          "description": "Total explorer inspiration sparks collected."
+        },
+        "auroraEnabled": {
+          "type": "boolean",
+          "description": "Whether the 3D sky aurora is enabled."
+        },
+        "onboardingDismissed": {
+          "type": "boolean",
+          "description": "Whether the onboarding banner has been dismissed."
+        },
+        "theme": {
+          "type": "string",
+          "description": "Visual theme mode.",
+          "enum": ["light", "dark"]
+        },
+        "colorStyle": {
+          "type": "string",
+          "description": "3D material and surface color palette mode.",
+          "enum": ["serious", "vibrant"]
+        },
+        "renderQuality": {
+          "type": "string",
+          "description": "3D WebGL rendering quality profile.",
+          "enum": ["mobile-light", "balanced", "high"]
+        },
+        "reducedMotion": {
+          "type": "boolean",
+          "description": "Accessibility reduced motion flag."
+        },
+        "fallback2D": {
+          "type": "boolean",
+          "description": "Accessibility 2D fallback mode flag."
+        },
+        "activeQuoteIndex": {
+          "type": "number",
+          "description": "Selected reflection quote index."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp."
+        }
+      },
+      "required": [
+        "userId",
+        "device",
+        "sparks",
+        "auroraEnabled",
+        "onboardingDismissed",
+        "theme",
+        "colorStyle",
+        "renderQuality",
+        "reducedMotion",
+        "fallback2D",
+        "activeQuoteIndex",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UserPrivateInfo": {
+      "title": "UserPrivateInfo",
+      "description": "Strictly isolated PII document for the authenticated user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner Firebase Auth UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address.",
+          "minLength": 3,
+          "maxLength": 254
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp."
+        }
+      },
+      "required": ["userId", "email", "createdAt", "updatedAt"]
+    },
+    "CategoryProfile": {
+      "title": "CategoryProfile",
+      "description": "Skill mastery assessment, per-node skill tree levels, indicator checklists, and personal reflections for one of the 10 Core Domains.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner Firebase Auth UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "categorySlug": {
+          "type": "string",
+          "description": "Slug identifier of the Core Skill Domain.",
+          "enum": [
+            "wpda",
+            "physical-wellness",
+            "music",
+            "engineering",
+            "business",
+            "content-creating",
+            "art",
+            "interpersonal-skill",
+            "exploration-adaptation",
+            "critical-thinking-logic"
+          ]
+        },
+        "level": {
+          "type": "number",
+          "description": "Computed or preset Core Domain mastery level (1 to 5)."
+        },
+        "nodeLevels": {
+          "type": "object",
+          "description": "Map of flat node index to mastery score (1..5 or null)."
+        },
+        "nodeChecklists": {
+          "type": "object",
+          "description": "Map of flat node index to per-level 3-indicator boolean checklists."
+        },
+        "assessmentNote": {
+          "type": "string",
+          "description": "Short summary note for the current mastery level.",
+          "maxLength": 1000
+        },
+        "capabilityNotes": {
+          "type": "string",
+          "description": "Practical field notes on capabilities in this domain.",
+          "maxLength": 5000
+        },
+        "meaningText": {
+          "type": "string",
+          "description": "Personal reflection on why this domain matters (Character Lore / Meaning).",
+          "maxLength": 10000
+        },
+        "potentialText": {
+          "type": "string",
+          "description": "Future exploration and project plans (Next Quest / Potential).",
+          "maxLength": 10000
+        },
+        "version": {
+          "type": "number",
+          "description": "Optimistic concurrency revision number."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp."
+        }
+      },
+      "required": [
+        "userId",
+        "categorySlug",
+        "level",
+        "nodeLevels",
+        "nodeChecklists",
+        "assessmentNote",
+        "capabilityNotes",
+        "meaningText",
+        "potentialText",
+        "version",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "EvidenceItem": {
+      "title": "EvidenceItem",
+      "description": "Verified portfolio artifact, performance log, reflection document, or external link associated with a Core Skill Domain.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique evidence item ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "The owner Firebase Auth UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "categorySlug": {
+          "type": "string",
+          "description": "Parent Core Skill Domain slug.",
+          "enum": [
+            "wpda",
+            "physical-wellness",
+            "music",
+            "engineering",
+            "business",
+            "content-creating",
+            "art",
+            "interpersonal-skill",
+            "exploration-adaptation",
+            "critical-thinking-logic"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "description": "Evidence title (1-120 chars).",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "summary": {
+          "type": "string",
+          "description": "Short narrative summary (0-2000 chars).",
+          "maxLength": 2000
+        },
+        "itemType": {
+          "type": "string",
+          "description": "Relic classification type.",
+          "enum": ["project", "experience", "document", "visual", "link"]
+        },
+        "occurredOn": {
+          "type": "string",
+          "description": "Optional ISO date string (YYYY-MM-DD).",
+          "maxLength": 32
+        },
+        "externalUrl": {
+          "type": "string",
+          "description": "Optional external HTTPS URL.",
+          "maxLength": 500,
+          "pattern": "^(|https://.+)$"
+        },
+        "usedNodeIds": {
+          "type": "array",
+          "description": "Bounded list of skill tree flat node indices (up to 18 nodes) exercised by this evidence."
+        },
+        "assetRefKey": {
+          "type": "string",
+          "description": "Reference key for local IndexedDB binary attachment.",
+          "maxLength": 200
+        },
+        "assetKey": {
+          "type": "string",
+          "description": "Display label for attached file name and size.",
+          "maxLength": 200
+        },
+        "assetName": {
+          "type": "string",
+          "description": "Original file name.",
+          "maxLength": 200
+        },
+        "assetMime": {
+          "type": "string",
+          "description": "MIME type of the attached file.",
+          "maxLength": 100
+        },
+        "sortOrder": {
+          "type": "number",
+          "description": "Display sort order within the category evidence gallery."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "categorySlug",
+        "title",
+        "summary",
+        "itemType",
+        "occurredOn",
+        "externalUrl",
+        "usedNodeIds",
+        "assetRefKey",
+        "assetKey",
+        "assetName",
+        "assetMime",
+        "sortOrder",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserAccount" },
+      "description": "Per-user account settings, preferences, and explorer spark counters."
+    },
+    "/users/{userId}/private/{infoId}": {
+      "schema": { "$ref": "#/entities/UserPrivateInfo" },
+      "description": "Strictly isolated PII subcollection storing user email."
+    },
+    "/users/{userId}/categoryProfiles/{categorySlug}": {
+      "schema": { "$ref": "#/entities/CategoryProfile" },
+      "description": "Per-user mastery assessment, 3-tier node scores, 3-indicator checklists, and reflections for each of the 10 Core Domains."
+    },
+    "/users/{userId}/categoryProfiles/{categorySlug}/evidence/{evidenceId}": {
+      "schema": { "$ref": "#/entities/EvidenceItem" },
+      "description": "Subcollection of portfolio evidence items (relics) belonging to a specific Core Domain profile."
+    }
+  }
+}
