@@ -28,9 +28,20 @@ import {
   sanitizeEvidenceItemInput,
 } from './schema';
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-export const auth = getAuth(app);
+let app: ReturnType<typeof initializeApp> | null = null;
+let dbInstance: ReturnType<typeof getFirestore> | null = null;
+let authInstance: ReturnType<typeof getAuth> | null = null;
+
+try {
+  app = initializeApp(firebaseConfig);
+  dbInstance = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+  authInstance = getAuth(app);
+} catch (err) {
+  console.warn('Firebase initialization skipped or offline:', err);
+}
+
+export const db = dbInstance as ReturnType<typeof getFirestore>;
+export const auth = authInstance as ReturnType<typeof getAuth>;
 export const googleProvider = new GoogleAuthProvider();
 
 export enum OperationType {

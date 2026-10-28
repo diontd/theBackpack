@@ -2358,7 +2358,7 @@ export function initBackpackRuntime(): void {
 
         let renderer;
         try {
-          renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+          renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true });
         } catch (e) {
           webglSupported = false;
           return null;
@@ -3644,6 +3644,7 @@ export function initBackpackRuntime(): void {
             if (this.floorItemNodes) {
               this.floorItemNodes.forEach(n => { n.labelProjectedOnce = false; });
             }
+            if (this.wakeInteraction) this.wakeInteraction(220);
           }
         };
 
@@ -9035,26 +9036,30 @@ export function initBackpackRuntime(): void {
     
 
     // Listen for Firebase Auth state changes to sync cloud profiles when signed in
-    onAuthStateChanged(auth, async (fbUser) => {
-      if (fbUser && fbUser.email && fbUser.emailVerified) {
-        try {
-          const cloudProfiles = await fetchUserCloudProfiles();
-          if (cloudProfiles) {
-            SEED_CATEGORIES.forEach((cat) => {
-              if (cloudProfiles[cat.slug]) {
-                state.profiles[cat.slug] = Object.assign(
-                  state.profiles[cat.slug],
-                  cloudProfiles[cat.slug],
-                  { userId: fbUser.uid }
-                );
-                ensureProfileNodeLevels(state.profiles[cat.slug], cat.slug);
+    try {
+      if (auth) {
+        onAuthStateChanged(auth, async (fbUser) => {
+          if (fbUser && fbUser.email && fbUser.emailVerified) {
+            try {
+              const cloudProfiles = await fetchUserCloudProfiles();
+              if (cloudProfiles) {
+                SEED_CATEGORIES.forEach((cat) => {
+                  if (cloudProfiles[cat.slug]) {
+                    state.profiles[cat.slug] = Object.assign(
+                      state.profiles[cat.slug],
+                      cloudProfiles[cat.slug],
+                      { userId: fbUser.uid }
+                    );
+                    ensureProfileNodeLevels(state.profiles[cat.slug], cat.slug);
+                  }
+                });
+                renderInventoryRack();
+                if (state.screen === "detail") renderCategoryDetail();
               }
-            });
-            renderInventoryRack();
-            if (state.screen === "detail") renderCategoryDetail();
+            } catch (e) {}
           }
-        } catch (e) {}
+        });
       }
-    });
+    } catch (e) {}
   })();
 }
