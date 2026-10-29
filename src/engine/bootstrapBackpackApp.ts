@@ -5482,7 +5482,7 @@ export function initBackpackRuntime(): void {
         viewMode: 'closeup',
         x: 0,
         y: 0,
-        scale: 1.48,
+        scale: 1.18,
         isFullscreen: false,
         isDragging: false,
         dragDist: 0,
@@ -5491,11 +5491,24 @@ export function initBackpackRuntime(): void {
         originX: 0,
         originY: 0,
         inspectorTab: null, // null | 'what' | 'how' | 'works'
+        inspectorCollapsed: false,
         highlightLineage: true,
         legendOpen: false,
         hintDismissed: false
       };
       state.expandedTierCards = {};
+
+      function syncStoneInspectorCollapsedUI() {
+        const bodyEl = document.getElementById('stoneInspectorCollapsibleBody');
+        const btnEl = document.getElementById('btnToggleInspectorDrawer');
+        const iconEl = document.getElementById('iconToggleInspectorDrawer');
+        const lblEl = document.getElementById('labelToggleInspectorDrawer');
+        const isCollapsed = !!(state.mapView && state.mapView.inspectorCollapsed);
+        if (bodyEl) bodyEl.classList.toggle('hidden', isCollapsed);
+        if (btnEl) btnEl.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+        if (iconEl) iconEl.textContent = isCollapsed ? '▲' : '▼';
+        if (lblEl) lblEl.textContent = isCollapsed ? 'Buka Detail (I)' : 'Ringkas Panel (I)';
+      }
 
       // Requirement #8 & P0 #3.3: Wide 1840x1280 Canvas with Generous Safe Margins so ZERO labels or nodes are ever clipped!
       const PRASASTI_SVG_W = 1840;
@@ -5549,12 +5562,12 @@ export function initBackpackRuntime(): void {
         state.mapView.viewMode = mode;
         if (mode === 'helicopter') {
           // Fit to Map: fits 100% of branches, nodes, and outer branch banners inside safe margins
-          state.mapView.scale = 0.96;
+          state.mapView.scale = 0.98;
           state.mapView.x = 0;
           state.mapView.y = 0;
         } else {
-          // Reset View / Fokus Inti: zooms into the Core Skill & Inner/Mid tiers (or centers on a requested node)
-          const s = 1.48;
+          // Reset View / Fokus Inti: balanced 118% zoom so all 3 tiers remain visible without clipping top/bottom branches
+          const s = 1.18;
           state.mapView.scale = s;
           if (typeof focusNodeIdx === 'number' && state.lastNodeCoords && state.lastNodeCoords[focusNodeIdx]) {
             const nc = state.lastNodeCoords[focusNodeIdx];
@@ -5573,21 +5586,21 @@ export function initBackpackRuntime(): void {
         if (!state.mapView || !state.lastNodeCoords || !state.lastNodeCoords[nodeIdx]) return;
         const nc = state.lastNodeCoords[nodeIdx];
         const s = state.mapView.scale;
-        if (forceCenter || state.mapView.viewMode === 'closeup') {
+        if (forceCenter) {
           state.mapView.x = Math.max(-680, Math.min(680, (PRASASTI_CX - nc.x) * s));
           state.mapView.y = Math.max(-480, Math.min(480, (PRASASTI_CY - nc.y) * s));
           applyPrasastiMapTransform();
           return;
         }
-        // In Fit-to-Map (helicopter) mode, gently nudge if the node is near the outer rim
+        // Gently nudge only if the selected node or its label pill sits near the outer rim
         const effX = nc.x * s + state.mapView.x + PRASASTI_CX * (1 - s);
         const effY = nc.y * s + state.mapView.y + PRASASTI_CY * (1 - s);
         let shiftX = 0;
         let shiftY = 0;
         if (effX < 230) shiftX = 230 - effX;
         else if (effX > PRASASTI_SVG_W - 230) shiftX = (PRASASTI_SVG_W - 230) - effX;
-        if (effY < 150) shiftY = 150 - effY;
-        else if (effY > PRASASTI_SVG_H - 180) shiftY = (PRASASTI_SVG_H - 180) - effY;
+        if (effY < 165) shiftY = 165 - effY;
+        else if (effY > PRASASTI_SVG_H - 195) shiftY = (PRASASTI_SVG_H - 195) - effY;
         if (Math.abs(shiftX) > 5 || Math.abs(shiftY) > 5) {
           state.mapView.x = Math.max(-680, Math.min(680, state.mapView.x + shiftX));
           state.mapView.y = Math.max(-480, Math.min(480, state.mapView.y + shiftY));
@@ -5604,22 +5617,21 @@ export function initBackpackRuntime(): void {
       }
 
       function openPrasastiFullscreenMap(focusIdx = undefined) {
-        const cardWrap = document.getElementById('prasastiMapCardWrap');
+        const cardWrap = document.getElementById('prasastiMapCardWrap') as HTMLDialogElement | null;
         if (!cardWrap) return;
         state.mapView.isFullscreen = true;
-        // P0 #3.5: Isolate fullscreen map so underlying header/footer never bleed through or overlap
-        document.body.classList.add('prasasti-map-open');
-        cardWrap.classList.remove('hidden');
-        cardWrap.classList.add('prasasti-fullscreen-mode');
-        cardWrap.style.animation = 'none';
-        void cardWrap.offsetWidth;
-        cardWrap.style.animation = '';
+        if (typeof cardWrap.showModal === 'function') {
+          if (!cardWrap.open) cardWrap.showModal();
+        } else {
+          cardWrap.setAttribute('open', '');
+        }
 
         populateMapDomainQuickSelect();
         const hintBar = document.getElementById('prasastiExploreHintBar');
         if (hintBar) {
           hintBar.classList.toggle('hidden', !!state.mapView.hintDismissed);
         }
+        syncStoneInspectorCollapsedUI();
 
         const cat = SEED_CATEGORIES.find(c => c.slug === state.selectedSlug) || SEED_CATEGORIES[0];
         const prof = state.profiles[cat.slug];
@@ -5637,15 +5649,22 @@ export function initBackpackRuntime(): void {
       }
 
       function closePrasastiFullscreenMap(silent = false) {
-        const cardWrap = document.getElementById('prasastiMapCardWrap');
+        const cardWrap = document.getElementById('prasastiMapCardWrap') as HTMLDialogElement | null;
         if (!cardWrap) return;
+        const wasOpen = state.mapView.isFullscreen || cardWrap.open;
         state.mapView.isFullscreen = false;
-        document.body.classList.remove('prasasti-map-open');
-        cardWrap.classList.remove('prasasti-fullscreen-mode');
-        cardWrap.classList.add('hidden');
+        const legendBox = document.getElementById('prasastiMapLegendBox') as HTMLElement | null;
+        if (legendBox && typeof legendBox.hidePopover === 'function' && legendBox.matches(':popover-open')) {
+          legendBox.hidePopover();
+        }
         const searchDrop = document.getElementById('mapSearchResultsDropdown');
         if (searchDrop) searchDrop.classList.add('hidden');
-        if (!silent) SoundFX.packBackpack();
+        if (typeof cardWrap.close === 'function') {
+          if (cardWrap.open) cardWrap.close();
+        } else {
+          cardWrap.removeAttribute('open');
+        }
+        if (!silent && wasOpen) SoundFX.packBackpack();
       }
 
       function computeDomainPrideStats(cat, nodeLevelsMap) {
@@ -6119,6 +6138,7 @@ export function initBackpackRuntime(): void {
             </div>
           </div>
         `;
+        syncStoneInspectorCollapsedUI();
       }
 
       // Inspect-Only handler when clicking/selecting a node on the Prasasti Map
@@ -6133,7 +6153,7 @@ export function initBackpackRuntime(): void {
         renderConstellationSkillTree(cat, prof.nodeLevels, prof.level);
 
         if (panToSafeZone) {
-          ensureNodeInSafeViewport(nodeIdx, state.mapView && state.mapView.viewMode === 'closeup');
+          ensureNodeInSafeViewport(nodeIdx, false);
         }
         SoundFX.hover();
       }
@@ -8042,27 +8062,59 @@ export function initBackpackRuntime(): void {
             ensureNodeInSafeViewport(idx, true);
           });
         }
-        if (btnFullMap) {
+        // Native <dialog> close event sync + progressive Invoker Commands feature detection (declarative-dialog-popover-control)
+        const supportsInvokerCommands = typeof HTMLButtonElement !== 'undefined' && 'commandForElement' in HTMLButtonElement.prototype;
+        const supportsPopover = typeof HTMLElement !== 'undefined' && 'popover' in HTMLElement.prototype;
+        const mapDialogEl = document.getElementById('prasastiMapCardWrap') as HTMLDialogElement | null;
+        if (mapDialogEl) {
+          mapDialogEl.addEventListener('close', () => {
+            const wasFullscreen = !!state.mapView.isFullscreen;
+            state.mapView.isFullscreen = false;
+            const searchDrop = document.getElementById('mapSearchResultsDropdown');
+            if (searchDrop) searchDrop.classList.add('hidden');
+            if (wasFullscreen) {
+              SoundFX.packBackpack();
+            }
+          });
+        }
+        if (btnFullMap && !supportsInvokerCommands) {
           btnFullMap.addEventListener('click', () => {
             closePrasastiFullscreenMap();
           });
         }
 
-        // P0 #3.1: Toggle Map Legend Popover
+        // Collapsible Bottom Inspector Drawer Toggle (Button + Keyboard Shortcut [I])
+        const btnToggleInspector = document.getElementById('btnToggleInspectorDrawer');
+        if (btnToggleInspector) {
+          btnToggleInspector.addEventListener('click', () => {
+            state.mapView.inspectorCollapsed = !state.mapView.inspectorCollapsed;
+            syncStoneInspectorCollapsedUI();
+            SoundFX.hover();
+          });
+        }
+
+        // P0 #3.1: Native Popover API Legend with toggle event sync & fallback
         const btnToggleLegend = document.getElementById('btnToggleMapLegend');
         const btnCloseLegend = document.getElementById('btnCloseMapLegend');
-        const legendBox = document.getElementById('prasastiMapLegendBox');
-        if (btnToggleLegend && legendBox) {
+        const legendBox = document.getElementById('prasastiMapLegendBox') as HTMLElement | null;
+        if (legendBox) {
+          legendBox.addEventListener('toggle', (ev: any) => {
+            const isOpen = ev && ev.newState ? ev.newState === 'open' : legendBox.matches(':popover-open');
+            state.mapView.legendOpen = isOpen;
+            if (btnToggleLegend) btnToggleLegend.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          });
+        }
+        if (!supportsPopover && btnToggleLegend && legendBox) {
           btnToggleLegend.addEventListener('click', () => {
             state.mapView.legendOpen = !state.mapView.legendOpen;
-            legendBox.classList.toggle('hidden', !state.mapView.legendOpen);
+            legendBox.classList.toggle(':popover-open', state.mapView.legendOpen);
             btnToggleLegend.setAttribute('aria-expanded', state.mapView.legendOpen ? 'true' : 'false');
           });
         }
-        if (btnCloseLegend && legendBox) {
+        if (!supportsPopover && btnCloseLegend && legendBox) {
           btnCloseLegend.addEventListener('click', () => {
             state.mapView.legendOpen = false;
-            legendBox.classList.add('hidden');
+            legendBox.classList.remove(':popover-open');
             if (btnToggleLegend) btnToggleLegend.setAttribute('aria-expanded', 'false');
           });
         }
@@ -8812,20 +8864,9 @@ export function initBackpackRuntime(): void {
             });
 
           if (!isTypingField && !anyModalOpen && !e.ctrlKey && !e.metaKey && !e.altKey && state.auth.authenticated) {
-            // Teknis #1: Direct Item Access via Keys 1-9 and 0
-            if (/^[0-9]$/.test(e.key)) {
-              e.preventDefault();
-              const idx = e.key === '0' ? 9 : (parseInt(e.key, 10) - 1);
-              const targetCat = SEED_CATEGORIES[idx];
-              if (targetCat) {
-                selectCategoryAndOpenDetail(targetCat.slug);
-                showGlobalNotice('success', `⌨️ Hotkey [${e.key}] → Langsung membuka #${targetCat.order} ${targetCat.name}`);
-              }
-              return;
-            }
-
-            // P1 #9: When Fullscreen Skill Tree Map is open, [ / ] or Left / Right Arrow keys cycle between skill nodes on the map!
-            const mapModalOpen = state.mapView && state.mapView.isFullscreen;
+            // P1 #9: When Fullscreen Skill Tree Map (<dialog>) is open, handle map-specific hotkeys first
+            const mapDialog = document.getElementById('prasastiMapCardWrap') as HTMLDialogElement | null;
+            const mapModalOpen = (state.mapView && state.mapView.isFullscreen) || !!(mapDialog && mapDialog.open);
             if (mapModalOpen) {
               const cat = SEED_CATEGORIES.find(c => c.slug === state.selectedSlug) || SEED_CATEGORIES[0];
               if (e.key === 'ArrowLeft' || e.key === '[') {
@@ -8838,7 +8879,31 @@ export function initBackpackRuntime(): void {
                 const nextIdx = ((state.inspectedNodeIdx || 0) + 1) % cat.nodes.length;
                 inspectStoneNodeOnly(nextIdx, true);
                 return;
+              } else if (e.key === 'i' || e.key === 'I') {
+                e.preventDefault();
+                state.mapView.inspectorCollapsed = !state.mapView.inspectorCollapsed;
+                syncStoneInspectorCollapsedUI();
+                SoundFX.hover();
+                return;
+              } else if (e.key === 'f' || e.key === 'F') {
+                e.preventDefault();
+                const nextMode = state.mapView.viewMode === 'helicopter' ? 'closeup' : 'helicopter';
+                setPrasastiMapViewMode(nextMode, nextMode === 'closeup' ? 'center' : undefined);
+                return;
               }
+              return;
+            }
+
+            // Teknis #1: Direct Item Access via Keys 1-9 and 0
+            if (/^[0-9]$/.test(e.key)) {
+              e.preventDefault();
+              const idx = e.key === '0' ? 9 : (parseInt(e.key, 10) - 1);
+              const targetCat = SEED_CATEGORIES[idx];
+              if (targetCat) {
+                selectCategoryAndOpenDetail(targetCat.slug);
+                showGlobalNotice('success', `⌨️ Hotkey [${e.key}] → Langsung membuka #${targetCat.order} ${targetCat.name}`);
+              }
+              return;
             }
 
             // Teknis #2: Left / Right Item Switching when in Detail View
@@ -8857,9 +8922,11 @@ export function initBackpackRuntime(): void {
           }
 
           if (e.key === 'Escape') {
-            const mapModalEl = document.getElementById('prasastiMapCardWrap');
-            if (mapModalEl && !mapModalEl.classList.contains('hidden')) {
-              closePrasastiFullscreenMap();
+            const mapModalEl = document.getElementById('prasastiMapCardWrap') as HTMLDialogElement | null;
+            if ((state.mapView && state.mapView.isFullscreen) || (mapModalEl && mapModalEl.open)) {
+              if (mapModalEl && typeof mapModalEl.close !== 'function') {
+                closePrasastiFullscreenMap();
+              }
               return;
             }
             if (!document.getElementById('modalConfirmDialog').classList.contains('hidden')) {
