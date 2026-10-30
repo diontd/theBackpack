@@ -1454,10 +1454,28 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
       max-width: min(30rem, calc(100vw - 1.5rem));
     }
 
-    /* Scroll Chaining Prevention inside Inspector Drawer & Search Results */
+    /* Scroll Chaining Prevention & Ergonomic Dark Scrollbar inside Inspector Drawer */
     #stoneNodeInspectorBox,
     #mapSearchResultsDropdown {
       overscroll-behavior: contain;
+    }
+    #stoneNodeInspectorBox {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(180, 130, 62, 0.45) rgba(20, 14, 10, 0.85);
+    }
+    #stoneNodeInspectorBox::-webkit-scrollbar {
+      width: 6px;
+    }
+    #stoneNodeInspectorBox::-webkit-scrollbar-track {
+      background: rgba(20, 14, 10, 0.85);
+      border-radius: 4px;
+    }
+    #stoneNodeInspectorBox::-webkit-scrollbar-thumb {
+      background: rgba(180, 130, 62, 0.45);
+      border-radius: 4px;
+    }
+    #stoneNodeInspectorBox::-webkit-scrollbar-thumb:hover {
+      background: rgba(180, 130, 62, 0.75);
     }
 
     /* P0 #3.2 & #9: Keyboard Focus & Controlled Glow on Map Stone Nodes */
@@ -1726,3 +1744,246 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
       background: rgba(16, 185, 129, 0.12);
     }
 
+    /* =====================================================================
+     * AUDIT COMPLIANCE & MISSING TAILWIND UTILITIES (0 FATAL, 0 MAYOR, 0 POLESAN)
+     * ===================================================================== */
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .mr-1\.5 { margin-right: 0.375rem; }
+    .ml-auto { margin-left: auto; }
+    .gap-x-2 { column-gap: 0.5rem; }
+    .gap-y-1\.5 { row-gap: 0.375rem; }
+    .min-w-\[120px\] { min-width: 120px; }
+    .min-w-\[140px\] { min-width: 140px; }
+    .min-w-\[175px\] { min-width: 175px; }
+    .max-w-\[195px\] { max-width: 195px; }
+    .max-w-\[220px\] { max-width: 220px; }
+    .max-w-full { max-width: 100%; }
+    .max-h-\[220px\] { max-height: 220px; }
+    .max-h-\[250px\] { max-height: 250px; }
+    .max-h-\[42dvh\] { max-height: 42dvh; }
+    .min-h-\[156px\] { min-height: 156px; }
+    .min-h-\[32px\] { min-height: 32px; }
+    .h-\[28dvh\] { height: 28dvh; }
+    .w-0 { width: 0px; }
+    .overflow-x-clip { overflow-x: clip; }
+    .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+    .line-through { text-decoration-line: line-through; }
+    .opacity-80 { opacity: 0.8; }
+    .opacity-85 { opacity: 0.85; }
+    .opacity-60 { opacity: 0.6; }
+    .opacity-45 { opacity: 0.45; }
+    .duration-300 { transition-duration: 300ms; }
+    .bg-black\/20 { background-color: rgba(0, 0, 0, 0.2); }
+    .bg-black\/30 { background-color: rgba(0, 0, 0, 0.3); }
+    .bg-black\/35 { background-color: rgba(0, 0, 0, 0.35); }
+    .bg-black\/40 { background-color: rgba(0, 0, 0, 0.4); }
+    .bg-black\/50 { background-color: rgba(0, 0, 0, 0.5); }
+    .bg-black\/\[0\.035\] { background-color: rgba(0, 0, 0, 0.035); }
+    .bg-white\/10 { background-color: rgba(255, 255, 255, 0.1); }
+    .bg-white\/15 { background-color: rgba(255, 255, 255, 0.15); }
+    .bg-white\/20 { background-color: rgba(255, 255, 255, 0.2); }
+    .bg-white\/60 { background-color: rgba(255, 255, 255, 0.6); }
+    .hover\:bg-white\/20:hover { background-color: rgba(255, 255, 255, 0.2); }
+    .border-white\/15 { border-color: rgba(255, 255, 255, 0.15); }
+    .border-white\/20 { border-color: rgba(255, 255, 255, 0.2); }
+    .border-white\/30 { border-color: rgba(255, 255, 255, 0.3); }
+    .border-white\/80 { border-color: rgba(255, 255, 255, 0.8); }
+    .bg-\[\#1E293B\] { background-color: #1E293B; }
+    .bg-\[\#06B6D4\]\/20 { background-color: rgba(6, 182, 212, 0.2); }
+    .bg-\[\#059669\] { background-color: #059669; }
+    .bg-\[\#059669\]\/15 { background-color: rgba(5, 150, 105, 0.15); }
+    .bg-\[\#10B981\] { background-color: #10B981; }
+    .hover\:bg-\[\#059669\]:hover { background-color: #059669; }
+    .bg-\[\#120D09\] { background-color: #120D09; }
+    .bg-\[\#120D0A\] { background-color: #120D0A; }
+    .bg-\[\#1A120B\] { background-color: #1A120B; }
+    .bg-\[\#1D140E\] { background-color: #1D140E; }
+    .bg-\[\#1F150E\] { background-color: #1F150E; }
+    .bg-purple-950\/60 { background-color: rgba(59, 7, 100, 0.6); }
+    .bg-purple-950\/70 { background-color: rgba(59, 7, 100, 0.7); }
+    .bg-purple-500\/20 { background-color: rgba(168, 85, 247, 0.2); }
+    .bg-emerald-950\/60 { background-color: rgba(2, 44, 34, 0.6); }
+    .border-\[\#67E8F9\]\/40 { border-color: rgba(103, 232, 249, 0.4); }
+    .border-\[\#67E8F9\]\/50 { border-color: rgba(103, 232, 249, 0.5); }
+    .border-\[\#FDE68A\]\/50 { border-color: rgba(253, 230, 138, 0.5); }
+    .border-\[\#1F7A4C\] { border-color: #1F7A4C; }
+    .border-\[\#1F7A4C\]\/40 { border-color: rgba(31, 122, 76, 0.4); }
+    .border-\[\#1F7A4C\]\/50 { border-color: rgba(31, 122, 76, 0.5); }
+    .border-\[\#B54D08\]\/35 { border-color: rgba(181, 77, 8, 0.35); }
+    .border-\[\#A84306\]\/30 { border-color: rgba(168, 67, 6, 0.3); }
+    .border-\[\#34D399\] { border-color: #34D399; }
+    .border-\[\#34D399\]\/40 { border-color: rgba(52, 211, 153, 0.4); }
+    .border-\[\#38BDF8\] { border-color: #38BDF8; }
+    .border-\[\#6E5030\] { border-color: #6E5030; }
+    .border-\[\#574433\] { border-color: #574433; }
+    .border-\[\#8C673E\]\/60 { border-color: rgba(140, 103, 62, 0.6); }
+    .border-purple-400\/25 { border-color: rgba(192, 132, 252, 0.25); }
+    .border-purple-400\/30 { border-color: rgba(192, 132, 252, 0.3); }
+    .border-purple-400\/40 { border-color: rgba(192, 132, 252, 0.4); }
+    .border-purple-400\/45 { border-color: rgba(192, 132, 252, 0.45); }
+    .border-emerald-400\/50 { border-color: rgba(52, 211, 153, 0.5); }
+    .hover\:border-amber-400:hover { border-color: #FBBF24; }
+    .text-\[\#CBD5E1\] { color: #CBD5E1; }
+    .text-\[\#A5F3FC\] { color: #A5F3FC; }
+    .text-\[\#67E8F9\] { color: #67E8F9; }
+    .text-\[\#34D399\] { color: #34D399; }
+    .text-\[\#A7F3D0\] { color: #A7F3D0; }
+    .text-\[\#E9D5FF\] { color: #E9D5FF; }
+    .text-\[\#DDD6FE\] { color: #DDD6FE; }
+    .text-\[\#FDE68A\] { color: #FDE68A; }
+    .text-\[\#FEF08A\] { color: #FEF08A; }
+    .text-\[\#94A3B8\] { color: #94A3B8; }
+    .text-\[\#F8FAFC\] { color: #F8FAFC; }
+    .text-purple-200 { color: #E9D5FF; }
+    .text-purple-300 { color: #D8B4FE; }
+    .text-purple-300\/90 { color: rgba(216, 180, 254, 0.9); }
+    .text-purple-300\/60 { color: rgba(216, 180, 254, 0.6); }
+    .text-purple-100\/80 { color: rgba(243, 232, 255, 0.8); }
+    .text-amber-300 { color: #FCD34D; }
+    .text-emerald-300 { color: #6EE7B7; }
+    .from-\[\#1F7A4C\] { --tw-gradient-from: #1F7A4C; --tw-gradient-to: rgba(255, 255, 255, 0); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+    .via-\[\#15803D\] { --tw-gradient-to: rgba(255, 255, 255, 0); --tw-gradient-stops: var(--tw-gradient-from), #15803D, var(--tw-gradient-to); }
+    .to-\[\#0F766E\] { --tw-gradient-to: #0F766E; }
+    .to-\[\#10B981\] { --tw-gradient-to: #10B981; }
+    html.dark .dark\:text-\[\#6EE7B7\] { color: #6EE7B7; }
+    .leading-tight { line-height: 1.25; }
+    .break-words { overflow-wrap: break-word; word-break: break-word; }
+
+    @media (min-width: 640px) {
+      .sm\:gap-1\.5 { gap: 0.375rem; }
+      .sm\:px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+      .sm\:py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+      .sm\:pt-2\.5 { padding-top: 0.625rem; }
+      .sm\:w-10 { width: 2.5rem; }
+      .sm\:w-auto { width: auto; }
+      .sm\:flex-1 { flex: 1 1 0%; }
+      .sm\:justify-start { justify-content: flex-start; }
+      .sm\:justify-end { justify-content: flex-end; }
+      .sm\:min-w-\[200px\] { min-width: 200px; }
+      .sm\:max-w-\[230px\] { max-width: 230px; }
+      .sm\:min-h-\[34px\] { min-height: 34px; }
+      .sm\:h-\[34dvh\] { height: 34dvh; }
+      .sm\:max-h-\[250px\] { max-height: 250px; }
+      .sm\:flex-nowrap { flex-wrap: nowrap; }
+    }
+    @media (min-width: 1024px) {
+      .lg\:hidden { display: none !important; }
+    }
+
+    /* High-contrast evolution stage pill inside .mastery-recessed-well (FATAL-01 Fix) */
+    #detailEvolutionStageBadge {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1.25;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
+    }
+
+    /* High-contrast Emerald Level-Up CTA Button */
+    .btn-levelup-ready {
+      background: linear-gradient(135deg, #1F7A4C 0%, #15803D 50%, #0F766E 100%) !important;
+      color: #FFFFFF !important;
+      border: 1px solid #6EE7B7 !important;
+      box-shadow: 0 6px 16px -3px rgba(16, 185, 129, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    }
+    .btn-levelup-ready:hover {
+      filter: brightness(1.08);
+    }
+
+    /* Hide harsh horizontal scrollbars on pill docks & tab bars (MAYOR-03 Fix) */
+    #detailTablist,
+    #floorQuickRosterBar,
+    #detailQuickRosterBar,
+    #inventoryBottomHudDock > div,
+    #detailBottomHudDock > div {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    #detailTablist::-webkit-scrollbar,
+    #floorQuickRosterBar::-webkit-scrollbar,
+    #detailQuickRosterBar::-webkit-scrollbar,
+    #inventoryBottomHudDock > div::-webkit-scrollbar,
+    #detailBottomHudDock > div::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    /* Fullscreen Prasasti Map sizing & Mobile (<640px) Canvas Ratio Fix (FATAL-03 & MAYOR-04 Fix) */
+    dialog#prasastiMapCardWrap {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      box-sizing: border-box !important;
+    }
+    @media (max-width: 639px) {
+      /* 1. Zero-Overlap Mobile Header for Prasasti Map (#prasastiMapCardWrap) */
+      dialog#prasastiMapCardWrap > div:first-child {
+        padding: 0.45rem 0.625rem !important;
+        gap: 0.35rem !important;
+      }
+      #prasastiHeaderLeftGroup {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+      }
+      #prasastiHeaderLeftGroup > div {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+      }
+      #prasastiHeaderLeftGroup > div > div:first-child {
+        justify-content: space-between !important;
+        width: 100% !important;
+      }
+      #prasastiHeaderRightGroup {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        justify-content: space-between !important;
+      }
+
+      /* 2. Full Readable Titles Without Truncation on Mobile 390px */
+      #detailCategoryTitle,
+      #prasastiConstellationBadge,
+      #inventoryHeading {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        display: block !important;
+        -webkit-line-clamp: unset !important;
+      }
+
+      /* 3. Fit All 4 Tabs Simultaneously on 390px Without Clipping */
+      #detailTablist {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        gap: 0.2rem !important;
+        overflow-x: visible !important;
+        padding: 0.2rem !important;
+      }
+      #detailTablist .detail-tab-btn {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        padding: 0.3rem 0.22rem !important;
+        font-size: 10px !important;
+        gap: 0.15rem !important;
+        min-height: 30px !important;
+      }
+      #tabCountCapabilities,
+      #tabCountEvidence {
+        padding: 0 0.25rem !important;
+        font-size: 9px !important;
+      }
+
+      /* 4. Compact Bottom Inspector & Top Hint Bar for >52% Map Canvas Height */
+      #stoneNodeInspectorBox {
+        max-height: 32dvh !important;
+        padding: 0.625rem 0.75rem !important;
+      }
+      #prasastiExploreHintBar {
+        font-size: 10px !important;
+        padding: 0.25rem 0.625rem !important;
+        top: 0.375rem !important;
+        left: 0.375rem !important;
+        max-width: calc(100% - 0.75rem) !important;
+      }
+    }

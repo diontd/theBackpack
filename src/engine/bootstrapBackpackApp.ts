@@ -2797,38 +2797,39 @@ export function initBackpackRuntime(): void {
         // 10-SKILL RADAR CHART DISPLAY IN THE 3D ENVIRONMENT!
         // =================================================================
         const noticeboardCanvas = document.createElement('canvas');
-        noticeboardCanvas.width = 768;
-        noticeboardCanvas.height = 540;
+        noticeboardCanvas.width = 1024;
+        noticeboardCanvas.height = 720;
         const noticeboardTex = new THREE.CanvasTexture(noticeboardCanvas);
+        noticeboardTex.anisotropy = 8;
 
         function updateWorldNoticeboardRadar() {
           const ctx = noticeboardCanvas.getContext('2d');
           const isSerious = state.preferences && state.preferences.colorStyle === 'serious';
-          // Warm parchment / slate expedition board background
-          ctx.fillStyle = isSerious ? '#1A242B' : '#102432';
-          ctx.fillRect(0, 0, 768, 540);
+          // High-contrast slate expedition board background
+          ctx.fillStyle = isSerious ? '#162028' : '#0E202E';
+          ctx.fillRect(0, 0, 1024, 720);
           ctx.strokeStyle = '#F4B942';
-          ctx.lineWidth = 8;
-          ctx.strokeRect(14, 14, 740, 512);
-          ctx.strokeStyle = 'rgba(74, 208, 196, 0.45)';
-          ctx.lineWidth = 2;
-          ctx.strokeRect(24, 24, 720, 492);
+          ctx.lineWidth = 10;
+          ctx.strokeRect(18, 18, 988, 684);
+          ctx.strokeStyle = 'rgba(74, 208, 196, 0.55)';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(32, 32, 960, 656);
 
           // Title Header on the 3D Noticeboard
-          ctx.fillStyle = '#F4B942';
-          ctx.font = 'bold 24px "JetBrains Mono", monospace';
+          ctx.fillStyle = '#FDE047';
+          ctx.font = '800 34px "JetBrains Mono", monospace';
           ctx.textAlign = 'center';
-          ctx.fillText('📋 PAPAN PENGUMUMAN · RADAR 10 SKILL', 384, 58);
+          ctx.fillText('📋 PAPAN PENGUMUMAN · RADAR 10 SKILL', 512, 76);
 
           const assessedCount = SEED_CATEGORIES.filter(c => state.profiles[c.slug] && state.profiles[c.slug].level !== null).length;
-          ctx.fillStyle = '#9CE0FF';
-          ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
-          ctx.fillText(`${assessedCount}/10 Kategori Dinilai · Klik Papan untuk Detail Penuh`, 384, 84);
+          ctx.fillStyle = '#A5F3FC';
+          ctx.font = '700 22px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText(`${assessedCount}/10 Kategori Dinilai · Klik Papan untuk Detail Penuh`, 512, 112);
 
           // Draw 10-Axis Radar Chart on the 3D Board
-          const cx = 384;
-          const cy = 308;
-          const maxR = 152;
+          const cx = 512;
+          const cy = 414;
+          const maxR = 198;
           const total = SEED_CATEGORIES.length;
 
           // Concentric decagon rings (Levels 1..5)
@@ -2843,8 +2844,8 @@ export function initBackpackRuntime(): void {
               else ctx.lineTo(px, py);
             });
             ctx.closePath();
-            ctx.strokeStyle = lvl === 5 ? 'rgba(244, 185, 66, 0.65)' : 'rgba(148, 184, 204, 0.28)';
-            ctx.lineWidth = lvl === 5 ? 2.5 : 1.5;
+            ctx.strokeStyle = lvl === 5 ? 'rgba(253, 224, 71, 0.78)' : 'rgba(148, 184, 204, 0.36)';
+            ctx.lineWidth = lvl === 5 ? 3.5 : 2;
             ctx.stroke();
           }
 
@@ -2857,8 +2858,8 @@ export function initBackpackRuntime(): void {
             ctx.beginPath();
             ctx.moveTo(cx, cy);
             ctx.lineTo(ox, oy);
-            ctx.strokeStyle = 'rgba(148, 184, 204, 0.28)';
-            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = 'rgba(148, 184, 204, 0.35)';
+            ctx.lineWidth = 2;
             ctx.stroke();
 
             const prof = state.profiles[cat.slug];
@@ -2867,14 +2868,14 @@ export function initBackpackRuntime(): void {
             polyPts.push({ x: cx + Math.cos(ang) * vr, y: cy + Math.sin(ang) * vr, rawLvl: prof ? prof.level : null });
 
             // Category short label around the radar
-            const lx = cx + Math.cos(ang) * (maxR + 36);
-            const ly = cy + Math.sin(ang) * (maxR + 28);
-            ctx.fillStyle = '#FFFDF5';
-            ctx.font = 'bold 14px "JetBrains Mono", monospace';
+            const lx = cx + Math.cos(ang) * (maxR + 52);
+            const ly = cy + Math.sin(ang) * (maxR + 38);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '800 20px "JetBrains Mono", monospace';
             ctx.fillText(`#${cat.order} ${cat.shortTag}`, lx, ly);
-            ctx.fillStyle = (prof && prof.level !== null) ? '#F4B942' : '#8FA8B5';
-            ctx.font = 'bold 13px "JetBrains Mono", monospace';
-            ctx.fillText((prof && prof.level !== null) ? `Lv.${prof.level}` : 'NULL', lx, ly + 16);
+            ctx.fillStyle = (prof && prof.level !== null) ? '#FDE047' : '#CBD5E1';
+            ctx.font = '700 18px "JetBrains Mono", monospace';
+            ctx.fillText((prof && prof.level !== null) ? `Lv.${prof.level}` : 'Lv.1', lx, ly + 22);
           });
 
           // Filled Skill Polygon
@@ -2884,20 +2885,20 @@ export function initBackpackRuntime(): void {
             else ctx.lineTo(pt.x, pt.y);
           });
           ctx.closePath();
-          ctx.fillStyle = 'rgba(223, 118, 31, 0.42)';
+          ctx.fillStyle = 'rgba(223, 118, 31, 0.48)';
           ctx.fill();
-          ctx.strokeStyle = '#F4B942';
-          ctx.lineWidth = 4;
+          ctx.strokeStyle = '#FDE047';
+          ctx.lineWidth = 5;
           ctx.stroke();
 
           // Vertex Dots
           polyPts.forEach(pt => {
             ctx.beginPath();
-            ctx.arc(pt.x, pt.y, 6, 0, Math.PI * 2);
-            ctx.fillStyle = pt.rawLvl !== null ? '#4AD0C4' : '#8FA8B5';
+            ctx.arc(pt.x, pt.y, 8, 0, Math.PI * 2);
+            ctx.fillStyle = pt.rawLvl !== null ? '#4AD0C4' : '#94A3B8';
             ctx.fill();
             ctx.strokeStyle = '#FFFFFF';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2.5;
             ctx.stroke();
           });
 
@@ -4760,13 +4761,13 @@ export function initBackpackRuntime(): void {
           evoBadgeEl.textContent = conciseStageNames[evo.stage] || evo.shortBadge;
           evoBadgeEl.setAttribute('title', evo.desc);
           if (evo.stage === 5) {
-            evoBadgeEl.className = 'px-2.5 py-0.5 rounded-full border evo-stage-pill-5 text-[#FEF08A] text-[10px] font-mono font-bold';
+            evoBadgeEl.className = 'px-2.5 py-0.5 rounded-full border evo-stage-pill-5 text-[#FEF08A] text-[10px] font-mono font-bold shrink-0';
           } else if (evo.stage === 4) {
-            evoBadgeEl.className = 'px-2 py-0.5 rounded-full bg-[#F59E0B]/25 border border-[#F59E0B]/50 text-[#FDE68A] text-[10px] font-mono font-bold';
+            evoBadgeEl.className = 'px-2.5 py-0.5 rounded-full bg-[#F59E0B]/25 border border-[#F59E0B]/50 text-[#FDE68A] text-[10px] font-mono font-bold shrink-0';
           } else if (evo.stage >= 2) {
-            evoBadgeEl.className = 'px-2 py-0.5 rounded-full bg-[#06B6D4]/20 border border-[#38BDF8]/40 text-[#A5F3FC] text-[10px] font-mono font-bold';
+            evoBadgeEl.className = 'px-2.5 py-0.5 rounded-full bg-[#06B6D4]/20 border border-[#38BDF8]/50 text-[#A5F3FC] text-[10px] font-mono font-bold shrink-0';
           } else {
-            evoBadgeEl.className = 'px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[#CBD5E1] text-[10px] font-mono font-bold';
+            evoBadgeEl.className = 'px-2.5 py-0.5 rounded-full bg-[#1E293B] border border-[#67E8F9]/50 text-[#67E8F9] text-[10px] font-mono font-bold shrink-0';
           }
         }
 
@@ -4914,7 +4915,7 @@ export function initBackpackRuntime(): void {
         });
 
         container.innerHTML = `
-          <svg id="skillRadarChartSvg" viewBox="0 0 ${size} ${size}" class="w-full h-full select-none overflow-visible">
+          <svg id="skillRadarChartSvg" viewBox="-28 -14 ${size + 56} ${size + 28}" class="w-full h-full select-none overflow-visible">
             ${gridPolygons}
             ${spokes}
             <polygon points="${dataPts.join(' ')}" fill="rgba(223, 118, 31, 0.28)" stroke="#DF761F" stroke-width="2.6" />
@@ -4974,10 +4975,10 @@ export function initBackpackRuntime(): void {
           : 'Tersimpan di perangkat · ' + new Date(prof.updatedAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
         const badgeEl = document.getElementById('detailLevelBadge');
-        badgeEl.textContent = mastery.shortLabel;
-        badgeEl.className = prof.level === null
-          ? 'px-2.5 py-1 rounded-xl border atlas-elevated text-[11px] font-mono font-semibold shrink-0 atlas-text-secondary'
-          : 'px-2.5 py-1 rounded-xl border border-[#DF761F] bg-[#DF761F]/15 text-[#B55B10] dark:text-[#F49B3E] text-[11px] font-mono font-bold shrink-0';
+        if (badgeEl) {
+          badgeEl.textContent = mastery.shortLabel;
+          badgeEl.className = 'sr-only';
+        }
 
         renderRpgLevelMeterInDetail(prof.level, cat.capabilities.length, prof.evidence.length);
 
@@ -5001,8 +5002,8 @@ export function initBackpackRuntime(): void {
           btn.setAttribute('aria-selected', isAct ? 'true' : 'false');
           btn.setAttribute('tabindex', isAct ? '0' : '-1');
           btn.className = isAct
-            ? 'detail-tab-btn luxury-tab-active flex-1 justify-center px-2.5 py-1.5 min-h-[34px] rounded-xl border text-xs font-extrabold text-amber-aa flex items-center gap-1.5 whitespace-nowrap transition-all'
-            : 'detail-tab-btn flex-1 justify-center px-2.5 py-1.5 min-h-[34px] rounded-xl border border-transparent text-xs font-bold atlas-text-secondary hover:text-current flex items-center gap-1.5 whitespace-nowrap transition-all';
+            ? 'detail-tab-btn luxury-tab-active flex-1 justify-center px-2 sm:px-2.5 py-1 sm:py-1.5 min-h-[32px] sm:min-h-[34px] rounded-xl border text-[11px] sm:text-xs font-extrabold text-amber-aa flex items-center gap-1 sm:gap-1.5 whitespace-nowrap transition-all'
+            : 'detail-tab-btn flex-1 justify-center px-2 sm:px-2.5 py-1 sm:py-1.5 min-h-[32px] sm:min-h-[34px] rounded-xl border border-transparent text-[11px] sm:text-xs font-bold atlas-text-secondary hover:text-current flex items-center gap-1 sm:gap-1.5 whitespace-nowrap transition-all';
         });
 
         const tabHumanDescEl = document.getElementById('activeTabHumanDesc');
@@ -5016,11 +5017,11 @@ export function initBackpackRuntime(): void {
         btnAdv.setAttribute('aria-pressed', !isMgmt ? 'true' : 'false');
         btnMgmt.setAttribute('aria-pressed', isMgmt ? 'true' : 'false');
         btnAdv.className = !isMgmt
-          ? 'w-8 h-8 rounded-full btn-amber-aa font-bold flex items-center justify-center transition-colors'
-          : 'w-8 h-8 rounded-full atlas-text-secondary hover:text-current flex items-center justify-center transition-colors';
+          ? 'px-2 sm:px-2.5 h-7 rounded-lg btn-amber-aa font-bold flex items-center justify-center gap-1 transition-colors text-[11px]'
+          : 'px-2 sm:px-2.5 h-7 rounded-lg atlas-text-secondary hover:text-current font-bold flex items-center justify-center gap-1 transition-colors text-[11px]';
         btnMgmt.className = isMgmt
-          ? 'w-8 h-8 rounded-full btn-amber-aa font-bold flex items-center justify-center transition-colors'
-          : 'w-8 h-8 rounded-full atlas-text-secondary hover:text-current flex items-center justify-center transition-colors';
+          ? 'px-2 sm:px-2.5 h-7 rounded-lg btn-amber-aa font-bold flex items-center justify-center gap-1 transition-colors text-[11px]'
+          : 'px-2 sm:px-2.5 h-7 rounded-lg atlas-text-secondary hover:text-current font-bold flex items-center justify-center gap-1 transition-colors text-[11px]';
 
         document.getElementById('adventurePanelsWrap').classList.toggle('hidden', isMgmt);
         document.getElementById('managementPanelsWrap').classList.toggle('hidden', !isMgmt);
@@ -5042,7 +5043,7 @@ export function initBackpackRuntime(): void {
         if (avgFormulaEl) {
           avgFormulaEl.textContent = nodeStats.unlockedCount === 0
             ? 'Core = Belum ada node dinilai (Unassessed —)'
-            : `Rata-rata ${nodeStats.unlockedCount} node aktif: ${nodeStats.exactAvg.toFixed(1)} → Core Lv.${nodeStats.coreLevel} (${getMasteryInfo(nodeStats.coreLevel).label})`;
+            : `Rata-rata ${nodeStats.unlockedCount} node aktif: ${nodeStats.exactAvg.toFixed(1)} → Core Lv.${nodeStats.coreLevel} · ${getMasteryInfo(nodeStats.coreLevel).label}`;
         }
 
         // Legacy Praktik Inti / Karya Puncak / Prinsip Utama removed per user request
@@ -5118,11 +5119,11 @@ export function initBackpackRuntime(): void {
                   return `
                     <div id="tierCardNode-${node.flatIdx}" class="skill-tier-row ${isExpanded ? 'is-expanded' : ''} ${!gate.unlocked ? 'is-locked-tier' : ''} transition-colors">
                       <!-- Entire Skill Box Header is Directly Clickable -->
-                      <div data-toggle-tier-detail="${node.flatIdx}" role="button" tabindex="0" aria-expanded="${isExpanded ? 'true' : 'false'}" class="skill-tier-row-header px-3 py-2.5 flex flex-wrap items-center justify-between gap-2" title="Klik untuk membuka/menutup detail, indikator, &amp; bukti karya">
+                      <div data-toggle-tier-detail="${node.flatIdx}" role="button" tabindex="0" aria-expanded="${isExpanded ? 'true' : 'false'}" class="skill-tier-row-header px-3 py-2.5 flex flex-wrap items-center justify-between gap-y-1.5 gap-x-2" title="Klik untuk membuka/menutup detail, indikator, &amp; bukti karya">
                         <!-- Left: Tier Badge + Skill Name + Progress & Evidence Pills -->
-                        <div class="flex items-center gap-2 min-w-0 flex-1">
+                        <div class="flex items-center gap-1.5 sm:gap-2 min-w-[175px] sm:min-w-[200px] flex-1">
                           <span class="px-1.5 py-0.5 rounded ${!gate.unlocked ? 'bg-purple-950/60 text-purple-200 border border-purple-400/30' : 'bg-black/5 dark:bg-white/10 atlas-text-secondary'} font-mono text-[10px] font-bold shrink-0" title="${tMeta.title}">${!gate.unlocked ? '⛓️' : tMeta.icon} ${tMeta.tag}</span>
-                          <span class="font-bold text-xs sm:text-sm truncate ${!gate.unlocked ? 'opacity-75 tracking-wide' : ''}">${escapeHtml(node.title)}</span>
+                          <span class="font-bold text-xs sm:text-sm leading-snug ${!gate.unlocked ? 'opacity-85 tracking-wide' : ''}">${escapeHtml(node.title)}</span>
                           ${gate.unlocked ? `
                             <span class="px-1.5 py-0.5 rounded-full font-mono text-[10px] font-bold ${allCurrentChecked ? 'bg-[#1F7A4C]/15 text-[#1F7A4C] dark:text-[#6EE7B7] border border-[#1F7A4C]/40' : 'bg-black/5 dark:bg-white/10 atlas-text-muted border atlas-border'} shrink-0" title="Progres indikator Level ${nLvl}: ${checkedCount}/3 tercentang">
                               ☑️ ${checkedCount}/3
@@ -5136,7 +5137,7 @@ export function initBackpackRuntime(): void {
                         </div>
 
                         <!-- Right: Map Shortcut + Mysterious Sealed Pill OR Level 1..5 Selector -->
-                        <div class="flex items-center gap-2 shrink-0" data-stop-row-toggle="true">
+                        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto" data-stop-row-toggle="true">
                           <button type="button" data-focus-map-node="${node.flatIdx}" class="px-2 h-7 rounded-lg border atlas-surface hover:border-[#DF761F] text-[10px] font-mono font-bold flex items-center gap-1 shrink-0" title="Inspeksi batu ${escapeHtml(node.title)} di Peta Prasasti">
                             <span>🗺️</span>
                             <span class="hidden sm:inline">Peta</span>
@@ -5145,7 +5146,7 @@ export function initBackpackRuntime(): void {
                           ${!gate.unlocked ? `
                             <span class="locked-cue-pill" title="Segel Prasasti Terkunci. Syarat pembuka: ${escapeHtml(gate.gateFormula)}">
                               <span>⛓️🔒</span>
-                              <span>TERSEGEL · Butuh ${escapeHtml(gate.gateFormula)}</span>
+                              <span>Tersegel · ${escapeHtml(gate.gateFormula)}</span>
                             </span>
                           ` : `
                             <div class="inline-flex items-center gap-1" role="group" aria-label="Pilih level 1 sampai 5 untuk ${escapeHtml(node.title)}">
@@ -5248,8 +5249,8 @@ export function initBackpackRuntime(): void {
                               <div class="flex items-center justify-between text-[11px]">
                                 <span class="font-bold ${viewedLvl === nLvl ? 'text-teal-aa' : 'atlas-text-secondary'}">
                                   ${viewedLvl === nLvl
-                                    ? `🎯 Target Aktif: Level ${nLvl} (${curLevelMeta.label})`
-                                    : (viewedLvl < nLvl ? `✅ Level ${viewedLvl} (${viewedLvlMeta.label}) — Sudah Terlewati` : `🔭 Pratinjau Target Level ${viewedLvl} (${viewedLvlMeta.label})`)}
+                                    ? `🎯 Target Aktif: Level ${nLvl} · ${curLevelMeta.label}`
+                                    : (viewedLvl < nLvl ? `✅ Level ${viewedLvl} · ${viewedLvlMeta.label} — Sudah Terlewati` : `🔭 Pratinjau Target Level ${viewedLvl} · ${viewedLvlMeta.label}`)}
                                 </span>
                                 <span class="font-mono text-[10px] font-bold ${viewedCheckedCount === 3 ? 'text-[#1F7A4C] dark:text-[#6EE7B7]' : 'atlas-text-muted'}">
                                   ${Math.round((viewedCheckedCount / 3) * 100)}% (${viewedCheckedCount}/3)
@@ -5293,7 +5294,7 @@ export function initBackpackRuntime(): void {
                               </span>
                               ${nLvl < 5 ? (
                                 allCurrentChecked ? `
-                                  <button type="button" data-quick-node-idx="${node.flatIdx}" data-quick-node-lvl="${nLvl + 1}" class="btn-gold-beckon px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#1F7A4C] via-[#15803D] to-[#0F766E] text-white font-mono text-xs font-extrabold shadow-md flex items-center gap-1.5 cursor-pointer transition-transform hover:scale-105">
+                                  <button type="button" data-quick-node-idx="${node.flatIdx}" data-quick-node-lvl="${nLvl + 1}" class="btn-levelup-ready px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#1F7A4C] via-[#15803D] to-[#0F766E] text-white font-mono text-xs font-extrabold shadow-md flex items-center gap-1.5 cursor-pointer transition-transform hover:scale-105">
                                     <span>🚀 NAIK KE LEVEL ${nLvl + 1} (${getMasteryInfo(nLvl + 1).label.split(' ')[0]})!</span>
                                   </button>
                                 ` : `
@@ -5978,11 +5979,11 @@ export function initBackpackRuntime(): void {
         // P1 #4.3: Explicit Domain -> Branch -> Tier Breadcrumb
         if (crumbEl) {
           crumbEl.innerHTML = `
-            <span class="text-[#FDE68A] font-bold">${escapeHtml(cat.shortTag.toUpperCase())}</span>
-            <span>→</span>
-            <span class="text-[#67E8F9] font-bold">${escapeHtml(inspNode.branchName)}</span>
-            <span>→</span>
-            <span>${tierIcons[inspNode.tierIdx]} ${tierNames[inspNode.tierIdx]}</span>
+            <span class="text-[#FDE68A] font-bold tracking-wide">${escapeHtml(cat.shortTag.toUpperCase())}</span>
+            <span class="text-[#8C673E] text-xs select-none">/</span>
+            <span class="text-[#38BDF8] font-bold tracking-wide">${escapeHtml(inspNode.branchName)}</span>
+            <span class="text-[#8C673E] text-xs select-none">/</span>
+            <span class="text-[#D6C7B2] font-semibold">${tierIcons[inspNode.tierIdx]} ${tierNames[inspNode.tierIdx]}</span>
           `;
         }
 
@@ -5991,13 +5992,13 @@ export function initBackpackRuntime(): void {
         const masteryInfo = getMasteryInfo(inspLvl);
         if (!inspGate.unlocked) {
           badgeEl.textContent = `🔒 Terkunci · Butuh Prasyarat`;
-          badgeEl.className = 'px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold bg-[#B42318]/35 border border-[#FCA5A5]/40 text-[#FCA5A5] shrink-0';
+          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-[#B42318]/30 border border-[#EF4444]/60 text-[#FCA5A5] shrink-0 shadow-xs';
         } else if (inspLvl === null) {
           badgeEl.textContent = `✦ Terbuka · Siap Dinilai`;
-          badgeEl.className = 'px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold bg-[#059669]/30 border border-[#6EE7B7]/50 text-[#6EE7B7] shrink-0';
+          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-[#059669]/30 border border-[#10B981]/60 text-[#6EE7B7] shrink-0 shadow-xs';
         } else {
-          badgeEl.textContent = `${inspLvl >= 5 ? '👑' : '★'} Skor ${inspLvl}/5 · ${masteryInfo.label}`;
-          badgeEl.className = 'px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold bg-[#F59E0B]/25 border border-[#FDE047]/60 text-[#FEF08A] shrink-0';
+          badgeEl.textContent = `${inspLvl >= 5 ? '👑' : '★'} Level ${inspLvl}/5 · ${masteryInfo.label}`;
+          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-[#D97706]/25 border border-[#F59E0B]/70 text-[#FEF08A] shrink-0 shadow-xs';
         }
 
         // P1 #4.4 & #6.3: Actionable Prerequisite Checklist (when Locked) or Next Unlock Impact (when Unlocked)
@@ -6006,29 +6007,30 @@ export function initBackpackRuntime(): void {
             const prereqCardsHtml = inspGate.prereqItems.map(item => {
               const deficit = Math.max(0, item.requiredScore - item.currentScore);
               const statusBadge = item.satisfied
-                ? `<span class="px-1.5 py-0.5 rounded bg-[#059669]/30 text-[#6EE7B7] font-mono text-[10px] font-bold">✓ Terpenuhi (${item.currentScore}/${item.requiredScore})</span>`
-                : `<span class="px-1.5 py-0.5 rounded bg-[#B42318]/35 text-[#FCA5A5] font-mono text-[10px] font-bold">Progres: ${item.currentScore}/${item.requiredScore} (kurang +${deficit} poin)</span>`;
+                ? `<span class="px-2 py-0.5 rounded-full bg-[#059669]/30 border border-[#10B981]/50 text-[#6EE7B7] font-mono text-xs font-bold inline-flex items-center gap-1">✓ Terpenuhi (${item.currentScore}/${item.requiredScore})</span>`
+                : `<span class="px-2 py-0.5 rounded-full bg-[#B42318]/35 border border-[#EF4444]/50 text-[#FCA5A5] font-mono text-xs font-bold inline-flex items-center gap-1">Progres: ${item.currentScore}/${item.requiredScore} (kurang +${deficit} poin)</span>`;
               return `
-                <div class="p-2 rounded-xl bg-[#1C130D] border ${item.satisfied ? 'border-[#059669]/50' : 'border-[#F59E0B]/60'} flex flex-wrap items-center justify-between gap-2">
-                  <div class="space-y-0.5">
-                    <div class="font-bold text-[#FFF8EB] text-[11px]">
-                      🔗 Prasyarat: <span class="text-[#FDE68A]">${escapeHtml(item.title)}</span>
-                      <span class="text-[#A89984] font-mono text-[10px]">(${escapeHtml(item.tierLabel)})</span>
+                <div class="p-3 rounded-2xl bg-[#1A120B] border ${item.satisfied ? 'border-[#059669]/60' : 'border-[#F59E0B]/60'} flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                  <div class="space-y-1 min-w-0">
+                    <div class="font-bold text-[#FFF8EB] text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
+                      <span class="text-[#FBBF24]">🔗 Prasyarat:</span>
+                      <span class="text-[#FDE68A] underline decoration-[#F59E0B]/50">${escapeHtml(item.title)}</span>
+                      <span class="text-[#D6C7B2] font-mono text-xs font-normal">(${escapeHtml(item.tierLabel)})</span>
                     </div>
-                    <div class="text-[11px] text-[#D6C7B2]">
-                      Selesaikan <strong>${escapeHtml(item.title)}</strong> minimal level <strong>${item.requiredScore}/5</strong> untuk membuka skill ini.
+                    <div class="text-xs text-[#E6D7C3] leading-relaxed">
+                      Selesaikan <strong class="text-[#FFF8EB]">${escapeHtml(item.title)}</strong> minimal level <strong class="text-[#FDE68A]">${item.requiredScore}/5</strong> untuk membuka skill ini.
                     </div>
                   </div>
-                  <div class="flex items-center gap-2 shrink-0">
+                  <div class="flex items-center gap-2.5 shrink-0">
                     ${statusBadge}
-                    <button type="button" data-jump-prereq-idx="${item.targetFlatIdx}" class="px-2.5 py-1 rounded-lg bg-[#38BDF8] hover:bg-[#0284C7] text-black hover:text-white font-mono text-[11px] font-extrabold transition-colors shadow-xs">
-                      🎯 Lihat ${escapeHtml(item.title)} →
+                    <button type="button" data-jump-prereq-idx="${item.targetFlatIdx}" class="px-3 py-1.5 rounded-xl bg-[#38BDF8] hover:bg-[#0284C7] active:scale-95 text-black hover:text-white font-mono text-xs font-extrabold transition-all shadow-xs cursor-pointer focus-visible:ring-2 focus-visible:ring-[#38BDF8]">
+                      🎯 Buka ${escapeHtml(item.title)} →
                     </button>
                   </div>
                 </div>
               `;
             }).join('');
-            prereqBarEl.innerHTML = `<div class="space-y-1.5 pt-0.5">${prereqCardsHtml}</div>`;
+            prereqBarEl.innerHTML = `<div class="space-y-2 pt-0.5">${prereqCardsHtml}</div>`;
           } else {
             // Node is Unlocked: show what downstream nodes this skill unlocks!
             const downstreamList = getDownstreamNodesUnlockedBy(cat, inspNode.flatIdx);
@@ -6037,19 +6039,25 @@ export function initBackpackRuntime(): void {
               const chipsHtml = downstreamList.map(d => {
                 const ready = curNum >= d.requiredScore;
                 return `
-                  <button type="button" data-jump-prereq-idx="${d.targetFlatIdx}" class="px-2 py-0.5 rounded-lg border ${ready ? 'border-[#34D399]/60 bg-[#059669]/20 text-[#6EE7B7]' : 'border-[#8C673E] bg-[#1D140E] text-[#FDE68A]'} hover:border-[#38BDF8] font-mono text-[10px] font-bold inline-flex items-center gap-1 transition-colors" title="Klik untuk melihat node lanjutan ini di peta">
-                    <span>${ready ? '🔓' : '🎯'} Membuka ${escapeHtml(d.title)} (min. ≥${d.requiredScore}/5) →</span>
+                  <button type="button" data-jump-prereq-idx="${d.targetFlatIdx}" class="px-3 py-1 rounded-xl border ${ready ? 'border-[#34D399]/70 bg-[#059669]/25 text-[#6EE7B7] hover:bg-[#059669]/40' : 'border-[#8C673E] bg-[#1D140E] text-[#FDE68A] hover:border-[#38BDF8] hover:text-[#38BDF8]'} font-mono text-xs font-bold inline-flex items-center gap-1.5 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#38BDF8]" title="Klik untuk melihat node lanjutan ini di peta">
+                    <span>${ready ? '🔓' : '🎯'}</span>
+                    <span>Membuka <strong>${escapeHtml(d.title)}</strong> (min. ≥${d.requiredScore}/5) →</span>
                   </button>
                 `;
               }).join('');
               prereqBarEl.innerHTML = `
-                <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
-                  <span class="font-mono text-[10px] text-[#A89984]">Jalur Berikutnya:</span>
+                <div class="flex flex-wrap items-center gap-2 pt-1">
+                  <span class="font-mono text-xs text-[#D6C7B2] font-semibold">Jalur Berikutnya:</span>
                   ${chipsHtml}
                 </div>
               `;
             } else {
-              prereqBarEl.innerHTML = `<div class="font-mono text-[10px] text-[#FDE68A]">👑 Puncak Cabang (Tier 3 · Sage) — Penguasaan tertinggi pada jalur ${escapeHtml(inspNode.branchName)}.</div>`;
+              prereqBarEl.innerHTML = `
+                <div class="p-2.5 rounded-xl bg-[#1C130D]/80 border border-[#F59E0B]/40 font-mono text-xs text-[#FDE68A] flex items-center gap-2">
+                  <span class="text-sm">👑</span>
+                  <span><strong>Puncak Cabang (Tier 3 · Sage)</strong> — Penguasaan tertinggi pada jalur <em>${escapeHtml(inspNode.branchName)}</em>.</span>
+                </div>
+              `;
             }
           }
         }
@@ -6063,25 +6071,31 @@ export function initBackpackRuntime(): void {
         const indicatorsForLevel = (inspNode.levelIndicators && inspNode.levelIndicators[effInspLvl || 1]) || [];
 
         const levelButtonsHtml = !inspGate.unlocked
-          ? `<span class="px-2.5 py-1 rounded-xl bg-[#B42318]/25 border border-[#FCA5A5]/40 text-[#FCA5A5] font-mono text-[11px] font-bold">🔒 Masih Terkunci · Butuh ${escapeHtml(inspGate.gateFormula)}</span>`
+          ? `<span class="px-3 py-1.5 rounded-xl bg-[#B42318]/25 border border-[#EF4444]/40 text-[#FCA5A5] font-mono text-xs font-bold flex items-center gap-1.5">🔒 Terkunci · Syarat: ${escapeHtml(inspGate.gateFormula)}</span>`
           : `
-            <div class="inline-flex items-center gap-1 bg-[#1D140E] p-1 rounded-xl border border-[#8C673E]" role="group" aria-label="Pilih level 1 sampai 5">
-              <span class="text-[10px] font-mono text-[#A89984] px-1 hidden sm:inline">Level:</span>
+            <div class="inline-flex items-center gap-1.5 bg-[#1A120B] p-1 rounded-xl border border-[#8C673E] shadow-inner" role="group" aria-label="Pilih level 1 sampai 5">
+              <span class="text-xs font-mono text-[#D6C7B2] px-1.5 hidden sm:inline font-semibold">Level:</span>
               ${[1, 2, 3, 4, 5].map(sc => {
                 const checkGate = canNodeAdvanceToTargetLevel(prof, cat.slug, inspNode.flatIdx, effInspLvl, sc);
                 const isCur = effInspLvl === sc;
                 const isNextReady = (sc === effInspLvl + 1) && checkGate.allowed;
                 const isGated = sc > effInspLvl && !checkGate.allowed;
                 const btnStyle = isCur
-                  ? 'bg-[#F59E0B] text-black border-[#FDE047]'
+                  ? 'bg-[#F59E0B] text-black border-[#FDE047] font-black shadow-xs ring-1 ring-[#FDE047]'
                   : (isNextReady
-                    ? 'bg-[#059669]/30 text-[#6EE7B7] border-[#34D399]'
-                    : (isGated ? 'border-[#5C4328] text-[#A89984] opacity-45 border-dashed cursor-not-allowed' : 'border-[#6E5030] text-[#F5EBE0] hover:border-[#F59E0B]'));
+                    ? 'bg-[#059669]/30 text-[#6EE7B7] border-[#34D399] hover:bg-[#059669]/50 shadow-xs'
+                    : (isGated
+                      ? 'border-[#5C4328] text-[#8C7A6B] bg-[#120D0A]/50 border-dashed cursor-not-allowed'
+                      : 'border-[#6E5030] bg-[#24170F] text-[#F5EBE0] hover:border-[#F59E0B] hover:text-[#FDE68A]'));
                 const btnTitle = isGated
                   ? `🔒 Centang dulu semua 3 indikator Level ${checkGate.missingLevel} (${checkGate.checkedCount}/3)`
-                  : `Level ${sc}/5 (${getMasteryInfo(sc).label})`;
+                  : `Level ${sc}/5 · ${getMasteryInfo(sc).label}`;
                 return `
-                  <button type="button" data-inspector-node-idx="${inspNode.flatIdx}" data-inspector-node-lvl="${sc}" class="w-7 h-6 rounded-lg border text-xs font-mono font-extrabold ${btnStyle}" title="${escapeHtml(btnTitle)}">${sc}</button>
+                  <button type="button"
+                          data-inspector-node-idx="${inspNode.flatIdx}"
+                          data-inspector-node-lvl="${sc}"
+                          class="w-8 h-8 rounded-lg border text-xs font-mono font-bold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#38BDF8] ${btnStyle}"
+                          title="${escapeHtml(btnTitle)}">${sc}</button>
                 `;
               }).join('')}
             </div>
@@ -6090,47 +6104,66 @@ export function initBackpackRuntime(): void {
         actionsEl.innerHTML = `${levelButtonsHtml}`;
         descEl.classList.remove('hidden');
         descEl.innerHTML = `
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 pt-1">
-            <div class="lg:col-span-5 p-2.5 rounded-xl bg-[#120D0A] border border-[#8C673E]/60 space-y-1">
-              <div class="font-mono text-[10px] font-extrabold text-[#FDE047] uppercase">Definisi · ${escapeHtml(inspNode.title)}</div>
-              <div class="text-[11px] text-[#F5EBE0] leading-relaxed">${escapeHtml(inspNode.whatIs)}</div>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 pt-1">
+            <div class="lg:col-span-5 p-3.5 sm:p-4 rounded-2xl bg-[#120D0A] border border-[#8C673E]/70 space-y-2 flex flex-col justify-between shadow-xs">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between gap-2 border-b border-[#8C673E]/40 pb-1.5">
+                  <span class="font-mono text-xs font-bold text-[#FDE047] uppercase tracking-wider flex items-center gap-1.5">
+                    <span>📖</span> Definisi &amp; Konsep
+                  </span>
+                  <span class="font-mono text-[11px] text-[#D6C7B2]">Tier ${inspNode.tierIdx + 1}</span>
+                </div>
+                <p class="text-xs sm:text-sm text-[#F5EBE0] leading-relaxed">${escapeHtml(inspNode.whatIs)}</p>
+              </div>
+              <div class="pt-2 border-t border-[#8C673E]/30 flex items-center justify-between text-[11px] font-mono text-[#D6C7B2]">
+                <span>Fokus: <strong class="text-[#FDE68A]">${escapeHtml(inspNode.branchName)}</strong></span>
+                <span>Kode: <code class="px-1.5 py-0.5 rounded bg-[#24170F] text-[#67E8F9]">${escapeHtml(cat.shortTag.toUpperCase())}-N${inspNode.flatIdx + 1}</code></span>
+              </div>
             </div>
-            <div class="lg:col-span-7 p-2.5 rounded-xl bg-[#120D0A] border border-[#38BDF8]/40 space-y-2">
+            <div class="lg:col-span-7 p-3.5 sm:p-4 rounded-2xl bg-[#120D0A] border ${!inspGate.unlocked ? 'border-[#B42318]/50' : 'border-[#38BDF8]/50'} space-y-2.5 shadow-xs">
               ${!inspGate.unlocked ? `
-                <div class="text-[11px] text-[#FCA5A5] font-mono">
-                  🔒 Tier ini masih terkunci. Penuhi syarat <strong>${escapeHtml(inspGate.gateFormula)}</strong> untuk membukanya langsung di <strong>Level 1</strong>.
+                <div class="flex items-start gap-3 p-3 rounded-xl bg-[#2A120E] border border-[#EF4444]/50 text-xs text-[#FCA5A5] leading-relaxed">
+                  <span class="text-lg">🔒</span>
+                  <div class="space-y-1">
+                    <div class="font-bold text-[#FEE2E2]">Tier Ini Masih Terkunci</div>
+                    <div>Penuhi prasyarat <strong class="text-[#FDE68A]">${escapeHtml(inspGate.gateFormula)}</strong> untuk membuka jalur ini langsung pada <strong>Level 1</strong>.</div>
+                  </div>
                 </div>
               ` : `
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                  <span class="font-mono text-[10px] font-extrabold text-[#6EE7B7] uppercase">
-                    ✅ Checklist 3 Indikator Level ${effInspLvl} (${getMasteryInfo(effInspLvl).label})
-                  </span>
-                  <span class="px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${allCurrentChecked ? 'bg-[#059669] text-white' : 'bg-[#261A11] text-[#FDE68A] border border-[#8C673E]'}">
-                    ${checkedCount}/3 Selesai
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#38BDF8]/30 pb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-emerald-400">✅</span>
+                    <span class="font-mono text-xs font-bold text-[#6EE7B7] uppercase tracking-wide">
+                      Checklist 3 Indikator · Level ${effInspLvl} (${getMasteryInfo(effInspLvl).label})
+                    </span>
+                  </div>
+                  <span class="px-2.5 py-0.5 rounded-full font-mono text-xs font-bold ${allCurrentChecked ? 'bg-[#059669] text-white shadow-xs' : 'bg-[#24170F] text-[#FDE68A] border border-[#8C673E]'}">
+                    ${checkedCount}/3 Terpenuhi
                   </span>
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-2">
                   ${indicatorsForLevel.map((indText, indIdx) => {
                     const isChecked = !!checkArr[indIdx];
                     return `
-                      <label class="flex items-start gap-2 p-1.5 rounded-lg border ${isChecked ? 'border-[#34D399]/60 bg-[#059669]/15' : 'border-[#5C4328]/60 bg-[#1A120B]'} cursor-pointer">
+                      <label class="flex items-start gap-2.5 p-2.5 rounded-xl border ${isChecked ? 'border-[#34D399]/70 bg-[#059669]/20' : 'border-[#5C4328]/70 bg-[#1A120B] hover:border-[#8C673E]'} cursor-pointer transition-all">
                         <input type="checkbox"
                                data-check-node-idx="${inspNode.flatIdx}"
                                data-check-node-lvl="${effInspLvl}"
                                data-check-ind-idx="${indIdx}"
                                ${isChecked ? 'checked' : ''}
-                               class="mt-0.5 w-3.5 h-3.5 accent-[#10B981] rounded cursor-pointer shrink-0" />
-                        <span class="text-[11px] leading-snug ${isChecked ? 'line-through text-[#A7F3D0]' : 'text-[#F5EBE0]'}">
-                          <strong class="font-mono text-[10px] text-[#FDE047]">#${indIdx + 1}:</strong> ${escapeHtml(indText)}
+                               class="mt-0.5 w-4 h-4 accent-[#10B981] rounded cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-[#38BDF8]" />
+                        <span class="text-xs leading-relaxed ${isChecked ? 'line-through text-[#A7F3D0]' : 'text-[#F5EBE0]'}">
+                          <strong class="font-mono text-xs text-[#FDE047] mr-1">#${indIdx + 1}</strong>${escapeHtml(indText)}
                         </span>
                       </label>
                     `;
                   }).join('')}
                 </div>
                 ${effInspLvl < 5 && allCurrentChecked ? `
-                  <div class="pt-1 flex justify-end">
-                    <button type="button" data-inspector-node-idx="${inspNode.flatIdx}" data-inspector-node-lvl="${effInspLvl + 1}" class="px-3 py-1 rounded-lg bg-[#10B981] hover:bg-[#059669] text-black font-mono text-[11px] font-extrabold shadow-xs cursor-pointer">
-                      ⬆️ Naik ke Level ${effInspLvl + 1} (${getMasteryInfo(effInspLvl + 1).label})
+                  <div class="pt-2 flex justify-end">
+                    <button type="button" data-inspector-node-idx="${inspNode.flatIdx}" data-inspector-node-lvl="${effInspLvl + 1}" class="px-4 py-2 rounded-xl bg-[#10B981] hover:bg-[#059669] active:scale-95 text-black font-mono text-xs font-extrabold shadow-md cursor-pointer transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8]">
+                      <span>🚀</span>
+                      <span>Naik ke Level ${effInspLvl + 1} · ${getMasteryInfo(effInspLvl + 1).label}</span>
                     </button>
                   </div>
                 ` : ''}
@@ -7556,6 +7589,7 @@ export function initBackpackRuntime(): void {
           }
           const nodeObj = cat.nodes[nodeIdx];
           renderCategoryDetail();
+          updateStoneNodeInspectorPanel(cat, prof.nodeLevels);
 
           if (isChecked && doneCount === 3 && lv < 5) {
             showGlobalNotice(
@@ -7584,6 +7618,7 @@ export function initBackpackRuntime(): void {
             const expKey = `${slug}_${nodeIdx}`;
             state.expandedTierCards[expKey] = true;
             renderCategoryDetail();
+            updateStoneNodeInspectorPanel(cat, targetMap);
             showGlobalNotice(
               'warning',
               `🔒 Sub-skill "${nodeObj.title}" (${nodeObj.tierName}) masih terkunci! Syarat buka: ${gate.gateFormula}.`
@@ -7603,6 +7638,7 @@ export function initBackpackRuntime(): void {
               const expKey = `${slug}_${nodeIdx}`;
               state.expandedTierCards[expKey] = true;
               renderCategoryDetail();
+              updateStoneNodeInspectorPanel(cat, targetMap);
               showGlobalNotice(
                 'warning',
                 `☑️ Belum bisa naik ke Level ${sanitizedNewLvl}! Centang dulu semua 3 indikator pada "${nodeObj.title}" di Level ${checkGate.missingLevel} (baru ${checkGate.checkedCount}/3 tercentang).`
@@ -7645,6 +7681,7 @@ export function initBackpackRuntime(): void {
             renderCategoryDetail();
             renderInventoryRack();
             updateUndoButtonVisibility();
+            updateStoneNodeInspectorPanel(cat, prof.nodeLevels);
 
             let unlockImpactMsg = '';
             if (deltaGates > 0) {
