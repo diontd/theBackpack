@@ -5492,7 +5492,7 @@ export function initBackpackRuntime(): void {
         originX: 0,
         originY: 0,
         inspectorTab: null, // null | 'what' | 'how' | 'works'
-        inspectorCollapsed: false,
+        inspectorCollapsed: true,
         highlightLineage: true,
         legendOpen: false,
         hintDismissed: false
@@ -5523,21 +5523,18 @@ export function initBackpackRuntime(): void {
         const btnLineage = document.getElementById('btnToggleMapLineageSpotlight');
         const isHeli = !state.mapView || state.mapView.viewMode === 'helicopter';
         if (btnHeli) {
-          btnHeli.className = isHeli
-            ? 'px-2.5 h-7 rounded-lg bg-[#F59E0B] text-black font-extrabold flex items-center gap-1 transition-colors shadow-xs'
-            : 'px-2.5 h-7 rounded-lg text-[#F5EBE0] hover:text-[#FDE68A] flex items-center gap-1 transition-colors';
+          btnHeli.className = (isHeli ? 'bg-white/20 text-white shadow-xs' : 'text-white/60 hover:text-white hover:bg-white/10') +
+            ' w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all';
         }
         if (btnClose) {
-          btnClose.className = !isHeli
-            ? 'px-2.5 h-7 rounded-lg bg-[#38BDF8] text-black font-extrabold flex items-center gap-1 transition-colors shadow-xs'
-            : 'px-2.5 h-7 rounded-lg text-[#F5EBE0] hover:text-[#67E8F9] flex items-center gap-1 transition-colors';
+          btnClose.className = (!isHeli ? 'bg-sky-500/80 text-white font-bold shadow-xs' : 'text-white/60 hover:text-white hover:bg-white/10') +
+            ' hidden sm:flex w-7 h-7 sm:w-8 sm:h-8 rounded-full items-center justify-center transition-all';
         }
         if (btnLineage && state.mapView) {
           const on = !!state.mapView.highlightLineage;
           btnLineage.setAttribute('aria-pressed', on ? 'true' : 'false');
-          btnLineage.className = on
-            ? 'px-2.5 h-8 rounded-xl border border-[#38BDF8] bg-[#38BDF8]/25 text-[#67E8F9] font-mono text-[11px] font-bold flex items-center gap-1'
-            : 'px-2.5 h-8 rounded-xl border border-[#6E5030] bg-[#1A120B] text-[#A89984] hover:text-[#FFF8EB] font-mono text-[11px] font-bold flex items-center gap-1';
+          btnLineage.className = (on ? 'bg-sky-500/25 border border-sky-400 text-sky-400 shadow-xs' : 'text-white/60 hover:text-white hover:bg-white/10') +
+            ' w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all';
         }
       }
 
@@ -6106,8 +6103,8 @@ export function initBackpackRuntime(): void {
 
         const masteryInfo = getMasteryInfo(inspLvl);
         if (!inspGate.unlocked) {
-          badgeEl.textContent = `🔒 Terkunci · Butuh Prasyarat`;
-          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-rose-500/20 border border-rose-500/50 text-rose-300 shrink-0 shadow-xs';
+          badgeEl.textContent = '🔒 Terkunci';
+          badgeEl.className = 'px-2.5 py-0.5 rounded-full font-mono text-xs font-bold bg-rose-500/20 border border-rose-500/40 text-rose-300 shrink-0 shadow-xs';
         } else if (inspLvl === null) {
           badgeEl.textContent = `✦ Terbuka · Siap Dinilai`;
           badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 shrink-0 shadow-xs';
@@ -6184,22 +6181,22 @@ export function initBackpackRuntime(): void {
         const indicatorsForLevel = (inspNode.levelIndicators && inspNode.levelIndicators[effInspLvl || 1]) || [];
 
         const levelButtonsHtml = !inspGate.unlocked
-          ? `<span class="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-xs font-bold flex items-center gap-1.5">🔒 Terkunci · Syarat: ${escapeHtml(inspGate.gateFormula)}</span>`
+          ? `<div class="w-full flex items-center justify-between gap-2 p-2 rounded-2xl bg-rose-950/25 border border-rose-500/30 text-rose-300 font-mono text-xs"><span class="flex items-center gap-1.5 font-bold"><span>🔒</span> <span>Syarat: ${escapeHtml(inspGate.gateFormula)}</span></span><span class="text-[11px] text-rose-200/70 hidden sm:inline">Penuhi prasyarat untuk membuka</span></div>`
           : `
-            <div class="inline-flex items-center gap-1.5 bg-[#080C16] p-1 rounded-xl border border-white/15 shadow-inner" role="group" aria-label="Pilih level 1 sampai 5">
-              <span class="text-xs font-mono text-slate-400 px-1.5 hidden sm:inline font-semibold">Level:</span>
+            <div class="inline-flex items-center gap-1 bg-black/50 p-1 rounded-full border border-white/10 shadow-inner" role="group" aria-label="Pilih level 1 sampai 5">
+              <span class="text-xs font-mono text-white/50 px-2 hidden sm:inline font-semibold">Tingkat:</span>
               ${[1, 2, 3, 4, 5].map(sc => {
                 const checkGate = canNodeAdvanceToTargetLevel(prof, cat.slug, inspNode.flatIdx, effInspLvl, sc);
                 const isCur = effInspLvl === sc;
                 const isNextReady = (sc === effInspLvl + 1) && checkGate.allowed;
                 const isGated = sc > effInspLvl && !checkGate.allowed;
                 const btnStyle = isCur
-                  ? 'bg-white text-slate-950 border-white font-black shadow-md ring-2 ring-cyan-400'
+                  ? 'bg-white text-slate-950 font-black shadow-md'
                   : (isNextReady
-                    ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/50 hover:bg-cyan-500/40 shadow-xs'
+                    ? 'bg-sky-500/20 text-sky-300 border border-sky-400/40 hover:bg-sky-500/35'
                     : (isGated
-                      ? 'border-white/5 text-slate-600 bg-white/5 border-dashed cursor-not-allowed'
-                      : 'border-white/10 bg-[#0B0F19] text-slate-300 hover:border-cyan-400 hover:text-white'));
+                      ? 'text-white/20 cursor-not-allowed'
+                      : 'text-white/60 hover:text-white hover:bg-white/10'));
                 const btnTitle = isGated
                   ? `🔒 Centang dulu semua 3 indikator Level ${checkGate.missingLevel} (${checkGate.checkedCount}/3)`
                   : `Level ${sc}/5 · ${getMasteryInfo(sc).label}`;
@@ -6207,7 +6204,7 @@ export function initBackpackRuntime(): void {
                   <button type="button"
                           data-inspector-node-idx="${inspNode.flatIdx}"
                           data-inspector-node-lvl="${sc}"
-                          class="w-8 h-8 rounded-lg border text-xs font-mono font-bold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-cyan-400 ${btnStyle}"
+                          class="w-7 h-7 sm:w-8 sm:h-8 rounded-full text-xs font-mono font-bold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 flex items-center justify-center ${btnStyle}"
                           title="${escapeHtml(btnTitle)}">${sc}</button>
                 `;
               }).join('')}
@@ -6338,9 +6335,9 @@ export function initBackpackRuntime(): void {
         const prideStripEl = document.getElementById('prasastiPrideStrip');
         if (prideStripEl) {
           prideStripEl.innerHTML = `
-            <span class="px-2 py-0.5 rounded-md bg-[#1A120B] border border-[#F59E0B]/40 text-[#FDE047]" title="Total Poin Skor Domain">★ ${pride.totalStars}/${pride.maxStars} Poin</span>
-            <span class="px-2 py-0.5 rounded-md bg-[#1A120B] border border-[#38BDF8]/40 text-[#67E8F9]" title="Jumlah Skill Node yang Terbuka">🔓 ${pride.openGates}/${pride.totalNodes} Terbuka</span>
-            <span class="px-2 py-0.5 rounded-md bg-[#1A120B] border border-[#34D399]/40 text-[#6EE7B7]" title="Jumlah Skill Kompeten (Skor ≥ 3/5)">💎 ${pride.masteredCount} Kompeten</span>
+            <span class="px-2 py-0.5 rounded-full bg-white/10 border border-white/10 text-amber-300 text-[11px] font-semibold shrink-0" title="Total Poin Skor Domain">★ ${pride.totalStars}/${pride.maxStars}</span>
+            <span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-white/10 border border-white/10 text-sky-300 text-[11px] font-semibold shrink-0" title="Jumlah Skill Node yang Terbuka">🔓 ${pride.openGates}/${pride.totalNodes} Terbuka</span>
+            <span class="hidden md:inline-block px-2 py-0.5 rounded-full bg-white/10 border border-white/10 text-emerald-300 text-[11px] font-semibold shrink-0" title="Jumlah Skill Kompeten (Skor ≥ 3/5)">💎 ${pride.masteredCount}</span>
           `;
         }
 
@@ -6352,76 +6349,72 @@ export function initBackpackRuntime(): void {
         // Defs: Filters, Gradients, and Directional Arrowheads
         let stoneReliefSvg = `
           <defs>
-            <radialGradient id="torchGlowGrad" cx="50%" cy="40%" r="80%">
-              <stop offset="0%" stop-color="#0B1120" stop-opacity="1" />
-              <stop offset="45%" stop-color="#060912" stop-opacity="1" />
-              <stop offset="100%" stop-color="#020306" stop-opacity="1" />
+            <radialGradient id="torchGlowGrad" cx="50%" cy="45%" r="75%">
+              <stop offset="0%" stop-color="#0E1626" stop-opacity="1" />
+              <stop offset="45%" stop-color="#080C16" stop-opacity="1" />
+              <stop offset="100%" stop-color="#04060A" stop-opacity="1" />
             </radialGradient>
-            <!-- Glowing Neon Filters for Unlocked Organic Conduits & Nodes -->
-            <filter id="glowCyan" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#00E5FF" flood-opacity="0.9" />
-            </filter>
-            <filter id="glowYellow" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#CCFF00" flood-opacity="0.9" />
-            </filter>
+            <!-- Sleek Apple Flat Glow Filters -->
             <filter id="glowBlue" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#0088FF" flood-opacity="0.9" />
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#0A84FF" flood-opacity="0.8" />
             </filter>
-            <filter id="glowRed" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#FF2A4D" flood-opacity="0.9" />
+            <filter id="glowGreen" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#30D158" flood-opacity="0.8" />
             </filter>
-            <filter id="glowViolet" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#B026FF" flood-opacity="0.9" />
+            <filter id="glowIndigo" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#5E5CE6" flood-opacity="0.8" />
             </filter>
             <filter id="glowOrange" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#FF6B00" flood-opacity="0.9" />
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#FF9F0A" flood-opacity="0.8" />
+            </filter>
+            <filter id="glowRose" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#FF375F" flood-opacity="0.8" />
+            </filter>
+            <filter id="glowYellow" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#FFD60A" flood-opacity="0.8" />
             </filter>
             <filter id="glowWhiteNode" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="0" stdDeviation="6.5" flood-color="#FFFFFF" flood-opacity="0.92" />
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#FFFFFF" flood-opacity="0.9" />
             </filter>
             <filter id="medallionShadow" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="4" stdDeviation="6.0" flood-color="#000000" flood-opacity="0.95" />
+              <feDropShadow dx="0" dy="4" stdDeviation="6.0" flood-color="#000000" flood-opacity="0.9" />
             </filter>
-            <!-- Prerequisite & Progression Arrowhead Markers -->
+            <!-- Prerequisite & Directional Arrowhead Markers -->
             <marker id="arrowPrereqCyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#00E5FF" />
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#0A84FF" />
             </marker>
             <marker id="arrowPrereqGold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FACC15" />
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FFD60A" />
             </marker>
             <marker id="arrowPrereqLocked" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
               <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#334155" />
             </marker>
             <marker id="arrowBranch0" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#00E5FF" />
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#0A84FF" />
             </marker>
             <marker id="arrowBranch1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#CCFF00" />
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#30D158" />
             </marker>
             <marker id="arrowBranch2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#0088FF" />
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#5E5CE6" />
             </marker>
             <marker id="arrowBranch3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF2A4D" />
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF9F0A" />
             </marker>
             <marker id="arrowBranch4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#B026FF" />
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF375F" />
             </marker>
             <marker id="arrowBranch5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF6B00" />
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FFD60A" />
             </marker>
           </defs>
           <rect x="-600" y="-480" width="${w + 1200}" height="${h + 960}" fill="url(#torchGlowGrad)" />
-          <!-- Subtle Jedi Fallen Order Celestial Arc Lines & Astrometric Grid -->
-          <circle cx="${cx}" cy="${h + 200}" r="480" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="6 10" opacity="0.38" />
-          <circle cx="${cx}" cy="${h + 200}" r="750" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="8 12" opacity="0.32" />
-          <circle cx="${cx}" cy="${h + 200}" r="1020" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="10 16" opacity="0.28" />
-          <circle cx="${cx}" cy="${h + 200}" r="1300" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="12 20" opacity="0.22" />
-          <line x1="${cx}" y1="40" x2="${cx}" y2="${h - 40}" stroke="#1E293B" stroke-width="1" stroke-dasharray="6 12" opacity="0.25" />
-          <!-- Celestial Coordinates & Sector Header -->
-          <text x="140" y="80" fill="#475569" font-family="ui-monospace, monospace" font-size="10" font-weight="bold" letter-spacing="2">SECTOR // CORE SKILL ATLAS</text>
-          <text x="${w - 320}" y="80" fill="#475569" font-family="ui-monospace, monospace" font-size="10" font-weight="bold" letter-spacing="2">41° 0' 3" N · 31° 10' 11" W</text>
-          <text x="${cx}" y="65" text-anchor="middle" fill="#64748B" font-family="ui-sans-serif, system-ui" font-size="11" font-weight="800" letter-spacing="3.5">ASCENDING SKILL TREE // ARCHITECTURE</text>
+          <!-- Subtle Astrometric Guide Arcs (Clean, No Text Clutter) -->
+          <circle cx="${cx}" cy="${h + 200}" r="480" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="6 10" opacity="0.32" />
+          <circle cx="${cx}" cy="${h + 200}" r="750" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="8 12" opacity="0.28" />
+          <circle cx="${cx}" cy="${h + 200}" r="1020" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="10 16" opacity="0.22" />
+          <circle cx="${cx}" cy="${h + 200}" r="1300" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="12 20" opacity="0.18" />
+          <line x1="${cx}" y1="40" x2="${cx}" y2="${h - 40}" stroke="#1E293B" stroke-width="1" stroke-dasharray="6 12" opacity="0.20" />
         `;
 
         // 1. Calculate Node Coordinates & Branch Bases in Ascending Organic Tree

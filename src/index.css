@@ -1331,7 +1331,7 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
       touch-action: none;
       user-select: none;
       -webkit-user-select: none;
-      background: radial-gradient(circle at 50% 50%, #2B1D12 0%, #160F0A 68%, #0C0805 100%);
+      background: radial-gradient(circle at 50% 45%, #0F1422 0%, #080B12 65%, #040609 100%);
     }
     .prasasti-map-viewport.is-panning {
       cursor: grabbing !important;
@@ -1366,8 +1366,8 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
       padding: 0;
       border: 0;
       border-radius: 0;
-      background-color: #030508;
-      background-image: radial-gradient(circle at 50% 40%, #0B101E 0%, #050810 65%, #020306 100%);
+      background-color: #05070B;
+      background-image: radial-gradient(circle at 50% 40%, #0D1322 0%, #060910 65%, #030407 100%);
       color: #F8FAFC;
       overflow: hidden;
       opacity: 0;
@@ -1919,27 +1919,20 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
       box-sizing: border-box !important;
     }
     @media (max-width: 639px) {
-      /* 1. Zero-Overlap Mobile Header for Prasasti Map (#prasastiMapCardWrap) */
-      dialog#prasastiMapCardWrap > div:first-child {
-        padding: 0.45rem 0.625rem !important;
-        gap: 0.35rem !important;
-      }
+      /* 1. Sleek Floating Island Mobile Layout for Prasasti Map */
       #prasastiHeaderLeftGroup {
-        width: 100% !important;
-        flex: 0 0 100% !important;
-      }
-      #prasastiHeaderLeftGroup > div {
-        flex: 1 1 0% !important;
-        min-width: 0 !important;
-      }
-      #prasastiHeaderLeftGroup > div > div:first-child {
-        justify-content: space-between !important;
-        width: 100% !important;
+        padding: 0.25rem 0.5rem !important;
+        height: 2.25rem !important;
+        max-width: 52% !important;
       }
       #prasastiHeaderRightGroup {
-        width: 100% !important;
-        flex: 0 0 100% !important;
-        justify-content: space-between !important;
+        padding: 0.2rem 0.4rem !important;
+        height: 2.25rem !important;
+      }
+      #stoneNodeInspectorBox {
+        max-width: 100% !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
       }
 
       /* 2. Full Readable Titles Without Truncation on Mobile 390px */
