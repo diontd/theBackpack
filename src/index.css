@@ -912,7 +912,8 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
 .border-dotted { border-style: dotted; }
 .bg-\[\#140E0A\] { background-color: #140E0A; }
 .bg-\[\#140E0A\]\/95 { background-color: rgba(20, 14, 10, 0.95); }
-.bg-\[\#140E0A\]\/98 { background-color: rgba(20, 14, 10, 0.98); }
+.bg-\[\#140E0A\]\/98 { background-color: rgba(6, 9, 16, 0.98);
+      border-color: rgba(255, 255, 255, 0.15); }
 .bg-\[\#18110B\] { background-color: #18110B; }
 .bg-\[\#1C130D\] { background-color: #1C130D; }
 .bg-\[\#261A11\] { background-color: #261A11; }
@@ -1365,9 +1366,9 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
       padding: 0;
       border: 0;
       border-radius: 0;
-      background-color: #100B07;
-      background-image: radial-gradient(circle at 50% 45%, #23180F 0%, #120C08 68%, #090604 100%);
-      color: #F5EBE0;
+      background-color: #030508;
+      background-image: radial-gradient(circle at 50% 40%, #0B101E 0%, #050810 65%, #020306 100%);
+      color: #F8FAFC;
       overflow: hidden;
       opacity: 0;
       transform: scale(0.96);
@@ -1401,7 +1402,7 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
       transition-behavior: allow-discrete;
     }
     dialog#prasastiMapCardWrap[open]::backdrop {
-      background-color: rgba(8, 5, 3, 0.88);
+      background-color: rgba(2, 3, 6, 0.94);
 
       @starting-style {
         background-color: rgba(8, 5, 3, 0);
@@ -1417,7 +1418,8 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
       margin: 0;
       z-index: 60;
       color: #F5EBE0;
-      background-color: rgba(20, 14, 10, 0.98);
+      background-color: rgba(6, 9, 16, 0.98);
+      border-color: rgba(255, 255, 255, 0.15);
       overscroll-behavior: contain;
       opacity: 0;
       transform: translateY(-0.5rem) scale(0.97);

@@ -5761,70 +5761,76 @@ export function initBackpackRuntime(): void {
       //           Attached Lock Badges 🔒, Dark Subtitle Pills, and Branch Themes.
       // =====================================================================
       const BRANCH_PALETTES = [
-        // Branch 0: Warm Solar Amber / Gold
+        // Branch 0: Electric Cyan / Plasma
         {
           id: 0,
-          primary: '#F59E0B',
-          glow: '#FDE047',
-          dark: '#78350F',
-          bgDark: '#211508',
-          rimLocked: '#543D22',
-          filterId: 'glowAmber',
+          primary: '#00E5FF',
+          glow: '#70F3FF',
+          core: '#FFFFFF',
+          dark: '#0369A1',
+          bgDark: '#041524',
+          rimLocked: '#16283D',
+          filterId: 'glowCyan',
           arrowId: 'arrowBranch0'
         },
-        // Branch 1: Forest Emerald / Jade
+        // Branch 1: Radiant Laser Yellow / Lime
         {
           id: 1,
-          primary: '#10B981',
-          glow: '#6EE7B7',
-          dark: '#064E3B',
-          bgDark: '#072418',
-          rimLocked: '#204738',
-          filterId: 'glowEmerald',
+          primary: '#CCFF00',
+          glow: '#E9FF70',
+          core: '#FFFFFF',
+          dark: '#4D7C0F',
+          bgDark: '#121F06',
+          rimLocked: '#263B12',
+          filterId: 'glowYellow',
           arrowId: 'arrowBranch1'
         },
-        // Branch 2: Royal Sapphire / Sky Cyan
+        // Branch 2: Royal Saber Blue
         {
           id: 2,
-          primary: '#0EA5E9',
-          glow: '#7DD3FC',
-          dark: '#0C4A6E',
-          bgDark: '#082333',
-          rimLocked: '#23445A',
-          filterId: 'glowCyan',
+          primary: '#0088FF',
+          glow: '#60B6FF',
+          core: '#FFFFFF',
+          dark: '#1D4ED8',
+          bgDark: '#06132D',
+          rimLocked: '#172C59',
+          filterId: 'glowBlue',
           arrowId: 'arrowBranch2'
         },
-        // Branch 3: Ruby Rose / Crimson
+        // Branch 3: Vivid Crimson / Saber Red
         {
           id: 3,
-          primary: '#F43F5E',
-          glow: '#FDA4AF',
-          dark: '#881337',
-          bgDark: '#280A13',
-          rimLocked: '#562532',
-          filterId: 'glowRose',
+          primary: '#FF2A4D',
+          glow: '#FF758D',
+          core: '#FFFFFF',
+          dark: '#BE123C',
+          bgDark: '#26060E',
+          rimLocked: '#4A1421',
+          filterId: 'glowRed',
           arrowId: 'arrowBranch3'
         },
-        // Branch 4: Amethyst Violet
+        // Branch 4: Neon Amethyst / Violet
         {
           id: 4,
-          primary: '#A855F7',
-          glow: '#E9D5FF',
-          dark: '#581C87',
-          bgDark: '#1E0E33',
-          rimLocked: '#4C2870',
+          primary: '#B026FF',
+          glow: '#D580FF',
+          core: '#FFFFFF',
+          dark: '#7E22CE',
+          bgDark: '#1A062E',
+          rimLocked: '#381657',
           filterId: 'glowViolet',
           arrowId: 'arrowBranch4'
         },
-        // Branch 5: Coral Bronze
+        // Branch 5: Neon Amber / Solar Fire
         {
           id: 5,
-          primary: '#F97316',
-          glow: '#FED7AA',
-          dark: '#7C2D12',
-          bgDark: '#281308',
-          rimLocked: '#572E1B',
-          filterId: 'glowBronze',
+          primary: '#FF6B00',
+          glow: '#FFA866',
+          core: '#FFFFFF',
+          dark: '#C2410C',
+          bgDark: '#260D04',
+          rimLocked: '#4F2312',
+          filterId: 'glowOrange',
           arrowId: 'arrowBranch5'
         }
       ];
@@ -5911,38 +5917,38 @@ export function initBackpackRuntime(): void {
         const baseR = nc.tIdx === 2 ? 35 : (nc.tIdx === 1 ? 30 : 26);
         const palette = BRANCH_PALETTES[nc.bIdx % BRANCH_PALETTES.length];
 
-        let circleFill = palette.bgDark;
+        let circleFill = '#070B16';
         let circleStroke = palette.primary;
-        let strokeW = 3.0;
-        let iconStroke = palette.glow;
+        let strokeW = 3.2;
+        let iconStroke = '#FFFFFF';
         let iconFill = 'none';
         let isFilledGlyph = false;
         let filterAttr = '';
 
         if (!isUnlocked) {
-          // Locked State: Sleek Dark Slate
-          circleFill = '#17110C';
-          circleStroke = '#3D2A1C';
+          // Locked State: Sleek Dark Obsidian Slate
+          circleFill = '#070B14';
+          circleStroke = '#1E293B';
           strokeW = 2.0;
-          iconStroke = '#785A3C';
+          iconStroke = '#475569';
           iconFill = 'none';
         } else if (!isAssessed) {
-          // Available / Ready to Assess State (Inviting glowing ring)
-          circleFill = palette.bgDark;
+          // Available / Ready to Assess State (Luminous glowing neon ring)
+          circleFill = '#070B16';
           circleStroke = palette.primary;
           strokeW = 3.2;
-          iconStroke = palette.glow;
+          iconStroke = '#FFFFFF';
           iconFill = 'none';
           filterAttr = `filter="url(#${palette.filterId})"`;
         } else {
-          // Assessed / Active Milestone State (Filled vibrant circular jewel)
-          circleFill = palette.primary;
-          circleStroke = palette.glow;
-          strokeW = 2.8;
-          iconStroke = palette.dark;
-          iconFill = palette.dark;
+          // Assessed / Completed State (Jedi Fallen Order style: Brilliant solid pure white medallion with dark obsidian glyph!)
+          circleFill = '#FFFFFF';
+          circleStroke = palette.primary;
+          strokeW = 3.4;
+          iconStroke = '#040711';
+          iconFill = '#040711';
           isFilledGlyph = true;
-          filterAttr = `filter="url(#${palette.filterId})"`;
+          filterAttr = 'filter="url(#glowWhiteNode)"';
         }
 
         // Thematic vector glyph inside the circle
@@ -5960,7 +5966,7 @@ export function initBackpackRuntime(): void {
           const lockY = y - baseR * 0.65;
           attachedBadgeSvg = `
             <g transform="translate(${lockX.toFixed(1)}, ${lockY.toFixed(1)})" filter="url(#medallionShadow)">
-              <circle cx="0" cy="0" r="11.5" fill="#140E0A" stroke="#78350F" stroke-width="1.8" />
+              <circle cx="0" cy="0" r="11.5" fill="#050811" stroke="#334155" stroke-width="1.8" />
               <text x="0" y="3.5" text-anchor="middle" font-size="10.5">🔒</text>
             </g>
           `;
@@ -5970,8 +5976,8 @@ export function initBackpackRuntime(): void {
           const pillY = y + baseR * 0.65;
           attachedBadgeSvg = `
             <g transform="translate(${pillX.toFixed(1)}, ${pillY.toFixed(1)})" filter="url(#medallionShadow)">
-              <circle cx="0" cy="0" r="11.5" fill="#120E0A" stroke="${palette.primary}" stroke-width="2.0" />
-              <text x="0" y="3.5" text-anchor="middle" fill="${palette.glow}" font-family="ui-monospace, monospace" font-size="9" font-weight="900">${lvl}/5</text>
+              <circle cx="0" cy="0" r="11.5" fill="#04060A" stroke="#FFFFFF" stroke-width="2.0" />
+              <text x="0" y="3.5" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="9" font-weight="900">${lvl}/5</text>
             </g>
           `;
         } else {
@@ -5980,23 +5986,23 @@ export function initBackpackRuntime(): void {
           const pillY = y + baseR * 0.65;
           attachedBadgeSvg = `
             <g transform="translate(${pillX.toFixed(1)}, ${pillY.toFixed(1)})" filter="url(#medallionShadow)">
-              <circle cx="0" cy="0" r="11" fill="#120E0A" stroke="#34D399" stroke-width="1.8" />
-              <text x="0" y="3.5" text-anchor="middle" fill="#6EE7B7" font-family="ui-monospace, monospace" font-size="10" font-weight="900">✦</text>
+              <circle cx="0" cy="0" r="11" fill="#070B16" stroke="${palette.primary}" stroke-width="1.8" />
+              <text x="0" y="3.5" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="10" font-weight="900">✦</text>
             </g>
           `;
         }
 
-        // Selection double ring halo (🎯 DIPILIH)
+        // Selection double ring halo (DIPILIH)
         let inspectRingSvg = '';
         let topRoleBadgeSvg = '';
         if (isInspected) {
           inspectRingSvg = `
-            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 15).toFixed(1)}" fill="none" stroke="#38BDF8" stroke-width="2.6" opacity="0.95" />
-            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 9).toFixed(1)}" fill="none" stroke="#FFFFFF" stroke-width="3.0" opacity="1" />
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 15).toFixed(1)}" fill="none" stroke="#00E5FF" stroke-width="2.2" opacity="0.9" stroke-dasharray="6 4" />
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 8).toFixed(1)}" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="1" />
           `;
           topRoleBadgeSvg = `
-            <rect x="${(x - 42).toFixed(1)}" y="${(y - baseR - 24).toFixed(1)}" width="84" height="17" rx="8.5" fill="#0284C7" stroke="#FFFFFF" stroke-width="1.4" filter="url(#medallionShadow)" />
-            <text x="${x.toFixed(1)}" y="${(y - baseR - 12.5).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="9.5" font-weight="extrabold">🎯 DIPILIH</text>
+            <rect x="${(x - 44).toFixed(1)}" y="${(y - baseR - 24).toFixed(1)}" width="88" height="18" rx="9" fill="#00E5FF" stroke="#FFFFFF" stroke-width="1.5" filter="url(#medallionShadow)" />
+            <text x="${x.toFixed(1)}" y="${(y - baseR - 11.5).toFixed(1)}" text-anchor="middle" fill="#04060A" font-family="ui-monospace, monospace" font-size="9.5" font-weight="900" letter-spacing="1">DIPILIH</text>
           `;
         } else if (prereqInfoForSelected) {
           const reqCol = prereqInfoForSelected.satisfied ? '#059669' : '#D97706';
@@ -6004,11 +6010,11 @@ export function initBackpackRuntime(): void {
             ? `✓ SYARAT (${prereqInfoForSelected.currentScore}/${prereqInfoForSelected.requiredScore})`
             : `🔗 SYARAT (≥${prereqInfoForSelected.requiredScore}/5)`;
           inspectRingSvg = `
-            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 12).toFixed(1)}" fill="none" stroke="${prereqInfoForSelected.satisfied ? '#34D399' : '#F59E0B'}" stroke-width="2.6" stroke-dasharray="6 3" opacity="0.95" />
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 12).toFixed(1)}" fill="none" stroke="${prereqInfoForSelected.satisfied ? '#34D399' : '#FACC15'}" stroke-width="2.6" stroke-dasharray="6 3" opacity="0.95" />
           `;
           topRoleBadgeSvg = `
-            <rect x="${(x - 54).toFixed(1)}" y="${(y - baseR - 24).toFixed(1)}" width="108" height="17" rx="8.5" fill="${reqCol}" stroke="#FEF08A" stroke-width="1.3" filter="url(#medallionShadow)" />
-            <text x="${x.toFixed(1)}" y="${(y - baseR - 12.5).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="9" font-weight="extrabold">${reqTxt}</text>
+            <rect x="${(x - 54).toFixed(1)}" y="${(y - baseR - 24).toFixed(1)}" width="108" height="18" rx="9" fill="${reqCol}" stroke="#FEF08A" stroke-width="1.3" filter="url(#medallionShadow)" />
+            <text x="${x.toFixed(1)}" y="${(y - baseR - 11.5).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="9" font-weight="extrabold">${reqTxt}</text>
           `;
         } else if (lvl >= 5) {
           topRoleBadgeSvg = `<text x="${x.toFixed(1)}" y="${(y - baseR - 11).toFixed(1)}" text-anchor="middle" font-size="16">👑</text>`;
@@ -6017,20 +6023,20 @@ export function initBackpackRuntime(): void {
         // Subtitle status line
         const masteryLabels = ['', 'Exposure', 'Foundation', 'Competence', 'Advanced', 'Mastery'];
         let statusLineText = '';
-        let statusLineColor = '#D6C7B2';
+        let statusLineColor = '#94A3B8';
         if (!isUnlocked) {
           const reqMin = nc.tIdx === 1 ? 'Butuh Basic ≥3' : 'Butuh Adv ≥4';
           statusLineText = `🔒 Terkunci · ${reqMin}`;
-          statusLineColor = '#FCA5A5';
+          statusLineColor = '#FDA4AF';
         } else if (!isAssessed) {
           statusLineText = '✦ Terbuka · Siap Dinilai';
-          statusLineColor = '#6EE7B7';
+          statusLineColor = '#67E8F9';
         } else if (lvl >= 5) {
           statusLineText = '👑 Lv.5/5 · Mastery';
           statusLineColor = '#FEF08A';
         } else {
           statusLineText = `★ Lv.${lvl}/5 · ${masteryLabels[lvl]}`;
-          statusLineColor = '#FDE047';
+          statusLineColor = '#BAE6FD';
         }
 
         const fullTitle = nc.node.title;
@@ -6057,19 +6063,18 @@ export function initBackpackRuntime(): void {
             ${inspectRingSvg}
             ${topRoleBadgeSvg}
             <!-- Main Circular Node -->
-            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${baseR}" fill="${circleFill}" stroke="${isInspected ? '#FFFFFF' : circleStroke}" stroke-width="${isInspected ? '3.6' : strokeW}" ${filterAttr} />
-            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR - 3.5).toFixed(1)}" fill="none" stroke="${isAssessed ? palette.glow : palette.primary}" stroke-width="1.0" opacity="0.45" />
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${baseR}" fill="${circleFill}" stroke="${isInspected ? '#FFFFFF' : circleStroke}" stroke-width="${isInspected ? '3.8' : strokeW}" ${filterAttr} />
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR - 3.5).toFixed(1)}" fill="none" stroke="${isAssessed ? '#FFFFFF' : palette.glow}" stroke-width="1.0" opacity="0.45" />
             ${iconSvg}
             ${attachedBadgeSvg}
             <!-- Label Pill Below Node -->
-            <rect x="${(pillX - labelWidth / 2).toFixed(1)}" y="${pillY.toFixed(1)}" width="${labelWidth.toFixed(1)}" height="31" rx="8" fill="#140E0A" stroke="${isInspected ? '#38BDF8' : (prereqInfoForSelected ? '#F59E0B' : (isUnlocked ? palette.primary : '#4A3522'))}" stroke-width="${isInspected || prereqInfoForSelected ? '2.2' : '1.4'}" filter="url(#medallionShadow)" />
-            <text x="${pillX.toFixed(1)}" y="${(pillY + 13).toFixed(1)}" text-anchor="middle" fill="#FFF8EB" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="extrabold">${escapeHtml(shortName)}</text>
+            <rect x="${(pillX - labelWidth / 2).toFixed(1)}" y="${pillY.toFixed(1)}" width="${labelWidth.toFixed(1)}" height="31" rx="8" fill="#060912" stroke="${isInspected ? '#00E5FF' : (prereqInfoForSelected ? '#FACC15' : (isUnlocked ? palette.primary : '#1E293B'))}" stroke-width="${isInspected || prereqInfoForSelected ? '2.2' : '1.4'}" filter="url(#medallionShadow)" />
+            <text x="${pillX.toFixed(1)}" y="${(pillY + 13).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="extrabold">${escapeHtml(shortName)}</text>
             <text x="${pillX.toFixed(1)}" y="${(pillY + 25).toFixed(1)}" text-anchor="middle" fill="${statusLineColor}" font-family="ui-monospace, monospace" font-size="9.5" font-weight="bold">${escapeHtml(statusLineText)}</text>
           </g>
         `;
       }
 
-      // P0 #3.2, P1 #4.3, #4.4 & #6.3: Actionable Stone Node Inspector with Breadcrumb, Specific Lock Progress & One-Click Prerequisite Jump!
       function updateStoneNodeInspectorPanel(cat, nodeLevelsMap) {
         if (!cat) return;
         const inspNode = cat.nodes[state.inspectedNodeIdx] || cat.nodes[0];
@@ -6087,14 +6092,13 @@ export function initBackpackRuntime(): void {
         const tierIcons = ['🌱', '🔥', '👑'];
         const tierNames = ['Tier 1 · Basic', 'Tier 2 · Advanced', 'Tier 3 · Sage'];
 
-        // P1 #4.3: Explicit Domain -> Branch -> Tier Breadcrumb
         if (crumbEl) {
           crumbEl.innerHTML = `
-            <span class="text-[#FDE68A] font-bold tracking-wide">${escapeHtml(cat.shortTag.toUpperCase())}</span>
-            <span class="text-[#8C673E] text-xs select-none">/</span>
-            <span class="text-[#38BDF8] font-bold tracking-wide">${escapeHtml(inspNode.branchName)}</span>
-            <span class="text-[#8C673E] text-xs select-none">/</span>
-            <span class="text-[#D6C7B2] font-semibold">${tierIcons[inspNode.tierIdx]} ${tierNames[inspNode.tierIdx]}</span>
+            <span class="text-cyan-400 font-bold tracking-wide">${escapeHtml(cat.shortTag.toUpperCase())}</span>
+            <span class="text-slate-600 text-xs select-none">/</span>
+            <span class="text-white font-bold tracking-wide">${escapeHtml(inspNode.branchName)}</span>
+            <span class="text-slate-600 text-xs select-none">/</span>
+            <span class="text-slate-400 font-semibold">${tierIcons[inspNode.tierIdx]} ${tierNames[inspNode.tierIdx]}</span>
           `;
         }
 
@@ -6103,38 +6107,37 @@ export function initBackpackRuntime(): void {
         const masteryInfo = getMasteryInfo(inspLvl);
         if (!inspGate.unlocked) {
           badgeEl.textContent = `🔒 Terkunci · Butuh Prasyarat`;
-          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-[#B42318]/30 border border-[#EF4444]/60 text-[#FCA5A5] shrink-0 shadow-xs';
+          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-rose-500/20 border border-rose-500/50 text-rose-300 shrink-0 shadow-xs';
         } else if (inspLvl === null) {
           badgeEl.textContent = `✦ Terbuka · Siap Dinilai`;
-          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-[#059669]/30 border border-[#10B981]/60 text-[#6EE7B7] shrink-0 shadow-xs';
+          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 shrink-0 shadow-xs';
         } else {
           badgeEl.textContent = `${inspLvl >= 5 ? '👑' : '★'} Level ${inspLvl}/5 · ${masteryInfo.label}`;
-          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-[#D97706]/25 border border-[#F59E0B]/70 text-[#FEF08A] shrink-0 shadow-xs';
+          badgeEl.className = 'px-3 py-1 rounded-full font-mono text-xs font-bold bg-white/15 border border-white/40 text-white shrink-0 shadow-xs';
         }
 
-        // P1 #4.4 & #6.3: Actionable Prerequisite Checklist (when Locked) or Next Unlock Impact (when Unlocked)
         if (prereqBarEl) {
           if (!inspGate.unlocked && Array.isArray(inspGate.prereqItems) && inspGate.prereqItems.length > 0) {
             const prereqCardsHtml = inspGate.prereqItems.map(item => {
               const deficit = Math.max(0, item.requiredScore - item.currentScore);
               const statusBadge = item.satisfied
-                ? `<span class="px-2 py-0.5 rounded-full bg-[#059669]/30 border border-[#10B981]/50 text-[#6EE7B7] font-mono text-xs font-bold inline-flex items-center gap-1">✓ Terpenuhi (${item.currentScore}/${item.requiredScore})</span>`
-                : `<span class="px-2 py-0.5 rounded-full bg-[#B42318]/35 border border-[#EF4444]/50 text-[#FCA5A5] font-mono text-xs font-bold inline-flex items-center gap-1">Progres: ${item.currentScore}/${item.requiredScore} (kurang +${deficit} poin)</span>`;
+                ? `<span class="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-mono text-xs font-bold inline-flex items-center gap-1">✓ Terpenuhi (${item.currentScore}/${item.requiredScore})</span>`
+                : `<span class="px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/50 text-rose-300 font-mono text-xs font-bold inline-flex items-center gap-1">Progres: ${item.currentScore}/${item.requiredScore} (kurang +${deficit} poin)</span>`;
               return `
-                <div class="p-3 rounded-2xl bg-[#1A120B] border ${item.satisfied ? 'border-[#059669]/60' : 'border-[#F59E0B]/60'} flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                <div class="p-3 rounded-2xl bg-[#090D17] border ${item.satisfied ? 'border-cyan-500/40' : 'border-rose-500/40'} flex flex-wrap items-center justify-between gap-3 shadow-xs">
                   <div class="space-y-1 min-w-0">
-                    <div class="font-bold text-[#FFF8EB] text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
-                      <span class="text-[#FBBF24]">🔗 Prasyarat:</span>
-                      <span class="text-[#FDE68A] underline decoration-[#F59E0B]/50">${escapeHtml(item.title)}</span>
-                      <span class="text-[#D6C7B2] font-mono text-xs font-normal">(${escapeHtml(item.tierLabel)})</span>
+                    <div class="font-bold text-white text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
+                      <span class="text-cyan-400">🔗 Prasyarat:</span>
+                      <span class="text-cyan-200 underline decoration-cyan-400/50">${escapeHtml(item.title)}</span>
+                      <span class="text-slate-400 font-mono text-xs font-normal">(${escapeHtml(item.tierLabel)})</span>
                     </div>
-                    <div class="text-xs text-[#E6D7C3] leading-relaxed">
-                      Selesaikan <strong class="text-[#FFF8EB]">${escapeHtml(item.title)}</strong> minimal level <strong class="text-[#FDE68A]">${item.requiredScore}/5</strong> untuk membuka skill ini.
+                    <div class="text-xs text-slate-300 leading-relaxed">
+                      Selesaikan <strong class="text-white">${escapeHtml(item.title)}</strong> minimal level <strong class="text-cyan-300">${item.requiredScore}/5</strong> untuk membuka skill ini.
                     </div>
                   </div>
                   <div class="flex items-center gap-2.5 shrink-0">
                     ${statusBadge}
-                    <button type="button" data-jump-prereq-idx="${item.targetFlatIdx}" class="px-3 py-1.5 rounded-xl bg-[#38BDF8] hover:bg-[#0284C7] active:scale-95 text-black hover:text-white font-mono text-xs font-extrabold transition-all shadow-xs cursor-pointer focus-visible:ring-2 focus-visible:ring-[#38BDF8]">
+                    <button type="button" data-jump-prereq-idx="${item.targetFlatIdx}" class="px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-black font-mono text-xs transition-all shadow-xs cursor-pointer focus-visible:ring-2 focus-visible:ring-cyan-400">
                       🎯 Buka ${escapeHtml(item.title)} →
                     </button>
                   </div>
@@ -6143,14 +6146,13 @@ export function initBackpackRuntime(): void {
             }).join('');
             prereqBarEl.innerHTML = `<div class="space-y-2 pt-0.5">${prereqCardsHtml}</div>`;
           } else {
-            // Node is Unlocked: show what downstream nodes this skill unlocks!
             const downstreamList = getDownstreamNodesUnlockedBy(cat, inspNode.flatIdx);
             if (downstreamList.length > 0) {
               const curNum = typeof inspLvl === 'number' ? inspLvl : 0;
               const chipsHtml = downstreamList.map(d => {
                 const ready = curNum >= d.requiredScore;
                 return `
-                  <button type="button" data-jump-prereq-idx="${d.targetFlatIdx}" class="px-3 py-1 rounded-xl border ${ready ? 'border-[#34D399]/70 bg-[#059669]/25 text-[#6EE7B7] hover:bg-[#059669]/40' : 'border-[#8C673E] bg-[#1D140E] text-[#FDE68A] hover:border-[#38BDF8] hover:text-[#38BDF8]'} font-mono text-xs font-bold inline-flex items-center gap-1.5 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#38BDF8]" title="Klik untuk melihat node lanjutan ini di peta">
+                  <button type="button" data-jump-prereq-idx="${d.targetFlatIdx}" class="px-3 py-1 rounded-xl border ${ready ? 'border-cyan-400/60 bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/35' : 'border-white/15 bg-[#0B0F19] text-slate-300 hover:border-cyan-400 hover:text-white'} font-mono text-xs font-bold inline-flex items-center gap-1.5 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-cyan-400" title="Klik untuk melihat node lanjutan ini di peta">
                     <span>${ready ? '🔓' : '🎯'}</span>
                     <span>Membuka <strong>${escapeHtml(d.title)}</strong> (min. ≥${d.requiredScore}/5) →</span>
                   </button>
@@ -6158,13 +6160,13 @@ export function initBackpackRuntime(): void {
               }).join('');
               prereqBarEl.innerHTML = `
                 <div class="flex flex-wrap items-center gap-2 pt-1">
-                  <span class="font-mono text-xs text-[#D6C7B2] font-semibold">Jalur Berikutnya:</span>
+                  <span class="font-mono text-xs text-slate-400 font-semibold">Jalur Berikutnya:</span>
                   ${chipsHtml}
                 </div>
               `;
             } else {
               prereqBarEl.innerHTML = `
-                <div class="p-2.5 rounded-xl bg-[#1C130D]/80 border border-[#F59E0B]/40 font-mono text-xs text-[#FDE68A] flex items-center gap-2">
+                <div class="p-2.5 rounded-xl bg-[#090D17] border border-white/15 font-mono text-xs text-cyan-300 flex items-center gap-2">
                   <span class="text-sm">👑</span>
                   <span><strong>Puncak Cabang (Tier 3 · Sage)</strong> — Penguasaan tertinggi pada jalur <em>${escapeHtml(inspNode.branchName)}</em>.</span>
                 </div>
@@ -6182,22 +6184,22 @@ export function initBackpackRuntime(): void {
         const indicatorsForLevel = (inspNode.levelIndicators && inspNode.levelIndicators[effInspLvl || 1]) || [];
 
         const levelButtonsHtml = !inspGate.unlocked
-          ? `<span class="px-3 py-1.5 rounded-xl bg-[#B42318]/25 border border-[#EF4444]/40 text-[#FCA5A5] font-mono text-xs font-bold flex items-center gap-1.5">🔒 Terkunci · Syarat: ${escapeHtml(inspGate.gateFormula)}</span>`
+          ? `<span class="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-xs font-bold flex items-center gap-1.5">🔒 Terkunci · Syarat: ${escapeHtml(inspGate.gateFormula)}</span>`
           : `
-            <div class="inline-flex items-center gap-1.5 bg-[#1A120B] p-1 rounded-xl border border-[#8C673E] shadow-inner" role="group" aria-label="Pilih level 1 sampai 5">
-              <span class="text-xs font-mono text-[#D6C7B2] px-1.5 hidden sm:inline font-semibold">Level:</span>
+            <div class="inline-flex items-center gap-1.5 bg-[#080C16] p-1 rounded-xl border border-white/15 shadow-inner" role="group" aria-label="Pilih level 1 sampai 5">
+              <span class="text-xs font-mono text-slate-400 px-1.5 hidden sm:inline font-semibold">Level:</span>
               ${[1, 2, 3, 4, 5].map(sc => {
                 const checkGate = canNodeAdvanceToTargetLevel(prof, cat.slug, inspNode.flatIdx, effInspLvl, sc);
                 const isCur = effInspLvl === sc;
                 const isNextReady = (sc === effInspLvl + 1) && checkGate.allowed;
                 const isGated = sc > effInspLvl && !checkGate.allowed;
                 const btnStyle = isCur
-                  ? 'bg-[#F59E0B] text-black border-[#FDE047] font-black shadow-xs ring-1 ring-[#FDE047]'
+                  ? 'bg-white text-slate-950 border-white font-black shadow-md ring-2 ring-cyan-400'
                   : (isNextReady
-                    ? 'bg-[#059669]/30 text-[#6EE7B7] border-[#34D399] hover:bg-[#059669]/50 shadow-xs'
+                    ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/50 hover:bg-cyan-500/40 shadow-xs'
                     : (isGated
-                      ? 'border-[#5C4328] text-[#8C7A6B] bg-[#120D0A]/50 border-dashed cursor-not-allowed'
-                      : 'border-[#6E5030] bg-[#24170F] text-[#F5EBE0] hover:border-[#F59E0B] hover:text-[#FDE68A]'));
+                      ? 'border-white/5 text-slate-600 bg-white/5 border-dashed cursor-not-allowed'
+                      : 'border-white/10 bg-[#0B0F19] text-slate-300 hover:border-cyan-400 hover:text-white'));
                 const btnTitle = isGated
                   ? `🔒 Centang dulu semua 3 indikator Level ${checkGate.missingLevel} (${checkGate.checkedCount}/3)`
                   : `Level ${sc}/5 · ${getMasteryInfo(sc).label}`;
@@ -6205,7 +6207,7 @@ export function initBackpackRuntime(): void {
                   <button type="button"
                           data-inspector-node-idx="${inspNode.flatIdx}"
                           data-inspector-node-lvl="${sc}"
-                          class="w-8 h-8 rounded-lg border text-xs font-mono font-bold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#38BDF8] ${btnStyle}"
+                          class="w-8 h-8 rounded-lg border text-xs font-mono font-bold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-cyan-400 ${btnStyle}"
                           title="${escapeHtml(btnTitle)}">${sc}</button>
                 `;
               }).join('')}
@@ -6216,39 +6218,39 @@ export function initBackpackRuntime(): void {
         descEl.classList.remove('hidden');
         descEl.innerHTML = `
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 pt-1">
-            <div class="lg:col-span-5 p-3.5 sm:p-4 rounded-2xl bg-[#120D0A] border border-[#8C673E]/70 space-y-2 flex flex-col justify-between shadow-xs">
+            <div class="lg:col-span-5 p-3.5 sm:p-4 rounded-2xl bg-[#080C16] border border-white/10 space-y-2 flex flex-col justify-between shadow-xs">
               <div class="space-y-1.5">
-                <div class="flex items-center justify-between gap-2 border-b border-[#8C673E]/40 pb-1.5">
-                  <span class="font-mono text-xs font-bold text-[#FDE047] uppercase tracking-wider flex items-center gap-1.5">
+                <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-1.5">
+                  <span class="font-mono text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
                     <span>📖</span> Definisi &amp; Konsep
                   </span>
-                  <span class="font-mono text-[11px] text-[#D6C7B2]">Tier ${inspNode.tierIdx + 1}</span>
+                  <span class="font-mono text-[11px] text-slate-400">Tier ${inspNode.tierIdx + 1}</span>
                 </div>
-                <p class="text-xs sm:text-sm text-[#F5EBE0] leading-relaxed">${escapeHtml(inspNode.whatIs)}</p>
+                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${escapeHtml(inspNode.whatIs)}</p>
               </div>
-              <div class="pt-2 border-t border-[#8C673E]/30 flex items-center justify-between text-[11px] font-mono text-[#D6C7B2]">
-                <span>Fokus: <strong class="text-[#FDE68A]">${escapeHtml(inspNode.branchName)}</strong></span>
-                <span>Kode: <code class="px-1.5 py-0.5 rounded bg-[#24170F] text-[#67E8F9]">${escapeHtml(cat.shortTag.toUpperCase())}-N${inspNode.flatIdx + 1}</code></span>
+              <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>Fokus: <strong class="text-cyan-300">${escapeHtml(inspNode.branchName)}</strong></span>
+                <span>Kode: <code class="px-1.5 py-0.5 rounded bg-white/5 text-cyan-300 border border-white/10">${escapeHtml(cat.shortTag.toUpperCase())}-N${inspNode.flatIdx + 1}</code></span>
               </div>
             </div>
-            <div class="lg:col-span-7 p-3.5 sm:p-4 rounded-2xl bg-[#120D0A] border ${!inspGate.unlocked ? 'border-[#B42318]/50' : 'border-[#38BDF8]/50'} space-y-2.5 shadow-xs">
+            <div class="lg:col-span-7 p-3.5 sm:p-4 rounded-2xl bg-[#080C16] border ${!inspGate.unlocked ? 'border-rose-500/40' : 'border-cyan-500/40'} space-y-2.5 shadow-xs">
               ${!inspGate.unlocked ? `
-                <div class="flex items-start gap-3 p-3 rounded-xl bg-[#2A120E] border border-[#EF4444]/50 text-xs text-[#FCA5A5] leading-relaxed">
+                <div class="flex items-start gap-3 p-3 rounded-xl bg-rose-950/30 border border-rose-500/40 text-xs text-rose-300 leading-relaxed">
                   <span class="text-lg">🔒</span>
                   <div class="space-y-1">
-                    <div class="font-bold text-[#FEE2E2]">Tier Ini Masih Terkunci</div>
-                    <div>Penuhi prasyarat <strong class="text-[#FDE68A]">${escapeHtml(inspGate.gateFormula)}</strong> untuk membuka jalur ini langsung pada <strong>Level 1</strong>.</div>
+                    <div class="font-bold text-rose-200">Tier Ini Masih Terkunci</div>
+                    <div>Penuhi prasyarat <strong class="text-cyan-300">${escapeHtml(inspGate.gateFormula)}</strong> untuk membuka jalur ini langsung pada <strong>Level 1</strong>.</div>
                   </div>
                 </div>
               ` : `
-                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#38BDF8]/30 pb-2">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-cyan-500/20 pb-2">
                   <div class="flex items-center gap-2">
-                    <span class="text-emerald-400">✅</span>
-                    <span class="font-mono text-xs font-bold text-[#6EE7B7] uppercase tracking-wide">
+                    <span class="text-cyan-400">✅</span>
+                    <span class="font-mono text-xs font-bold text-cyan-300 uppercase tracking-wide">
                       Checklist 3 Indikator · Level ${effInspLvl} (${getMasteryInfo(effInspLvl).label})
                     </span>
                   </div>
-                  <span class="px-2.5 py-0.5 rounded-full font-mono text-xs font-bold ${allCurrentChecked ? 'bg-[#059669] text-white shadow-xs' : 'bg-[#24170F] text-[#FDE68A] border border-[#8C673E]'}">
+                  <span class="px-2.5 py-0.5 rounded-full font-mono text-xs font-bold ${allCurrentChecked ? 'bg-cyan-500 text-slate-950 shadow-xs font-black' : 'bg-white/10 text-cyan-300 border border-white/15'}">
                     ${checkedCount}/3 Terpenuhi
                   </span>
                 </div>
@@ -6256,15 +6258,15 @@ export function initBackpackRuntime(): void {
                   ${indicatorsForLevel.map((indText, indIdx) => {
                     const isChecked = !!checkArr[indIdx];
                     return `
-                      <label class="flex items-start gap-2.5 p-2.5 rounded-xl border ${isChecked ? 'border-[#34D399]/70 bg-[#059669]/20' : 'border-[#5C4328]/70 bg-[#1A120B] hover:border-[#8C673E]'} cursor-pointer transition-all">
+                      <label class="flex items-start gap-2.5 p-2.5 rounded-xl border ${isChecked ? 'border-cyan-400/60 bg-cyan-500/15' : 'border-white/10 bg-[#0B0F1D] hover:border-cyan-400/40'} cursor-pointer transition-all">
                         <input type="checkbox"
                                data-check-node-idx="${inspNode.flatIdx}"
                                data-check-node-lvl="${effInspLvl}"
                                data-check-ind-idx="${indIdx}"
                                ${isChecked ? 'checked' : ''}
-                               class="mt-0.5 w-4 h-4 accent-[#10B981] rounded cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-[#38BDF8]" />
-                        <span class="text-xs leading-relaxed ${isChecked ? 'line-through text-[#A7F3D0]' : 'text-[#F5EBE0]'}">
-                          <strong class="font-mono text-xs text-[#FDE047] mr-1">#${indIdx + 1}</strong>${escapeHtml(indText)}
+                               class="mt-0.5 w-4 h-4 accent-cyan-400 rounded cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-cyan-400" />
+                        <span class="text-xs leading-relaxed ${isChecked ? 'line-through text-cyan-200' : 'text-slate-200'}">
+                          <strong class="font-mono text-xs text-cyan-400 mr-1">#${indIdx + 1}</strong>${escapeHtml(indText)}
                         </span>
                       </label>
                     `;
@@ -6272,7 +6274,7 @@ export function initBackpackRuntime(): void {
                 </div>
                 ${effInspLvl < 5 && allCurrentChecked ? `
                   <div class="pt-2 flex justify-end">
-                    <button type="button" data-inspector-node-idx="${inspNode.flatIdx}" data-inspector-node-lvl="${effInspLvl + 1}" class="px-4 py-2 rounded-xl bg-[#10B981] hover:bg-[#059669] active:scale-95 text-black font-mono text-xs font-extrabold shadow-md cursor-pointer transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8]">
+                    <button type="button" data-inspector-node-idx="${inspNode.flatIdx}" data-inspector-node-lvl="${effInspLvl + 1}" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-mono text-xs font-black shadow-md cursor-pointer transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-cyan-400">
                       <span>🚀</span>
                       <span>Naik ke Level ${effInspLvl + 1} · ${getMasteryInfo(effInspLvl + 1).label}</span>
                     </button>
@@ -6285,7 +6287,6 @@ export function initBackpackRuntime(): void {
         syncStoneInspectorCollapsedUI();
       }
 
-      // Inspect-Only handler when clicking/selecting a node on the Prasasti Map
       function inspectStoneNodeOnly(nodeIdx, panToSafeZone = true) {
         const cat = SEED_CATEGORIES.find(c => c.slug === state.selectedSlug) || SEED_CATEGORIES[0];
         const prof = state.profiles[cat.slug];
@@ -6351,68 +6352,76 @@ export function initBackpackRuntime(): void {
         // Defs: Filters, Gradients, and Directional Arrowheads
         let stoneReliefSvg = `
           <defs>
-            <radialGradient id="torchGlowGrad" cx="50%" cy="65%" r="75%">
-              <stop offset="0%" stop-color="#24150A" stop-opacity="0.92" />
-              <stop offset="45%" stop-color="#120D08" stop-opacity="0.97" />
-              <stop offset="100%" stop-color="#060403" stop-opacity="1" />
+            <radialGradient id="torchGlowGrad" cx="50%" cy="40%" r="80%">
+              <stop offset="0%" stop-color="#0B1120" stop-opacity="1" />
+              <stop offset="45%" stop-color="#060912" stop-opacity="1" />
+              <stop offset="100%" stop-color="#020306" stop-opacity="1" />
             </radialGradient>
-            <!-- Prerequisite & Progression Arrowhead Markers -->
-            <marker id="arrowPrereqCyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#22D3EE" />
-            </marker>
-            <marker id="arrowPrereqGold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FBBF24" />
-            </marker>
-            <marker id="arrowPrereqRose" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FB7185" />
-            </marker>
-            <marker id="arrowPrereqLocked" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#785C3C" />
-            </marker>
-            <marker id="arrowBranch0" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#F59E0B" />
-            </marker>
-            <marker id="arrowBranch1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#10B981" />
-            </marker>
-            <marker id="arrowBranch2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#0EA5E9" />
-            </marker>
-            <marker id="arrowBranch3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#F43F5E" />
-            </marker>
-            <marker id="arrowBranch4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#A855F7" />
-            </marker>
-            <marker id="arrowBranch5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#F97316" />
-            </marker>
-            <!-- Glowing Neon Filters for Unlocked Organic Conduits -->
-            <filter id="glowAmber" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#F59E0B" flood-opacity="0.82" />
-            </filter>
-            <filter id="glowEmerald" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#10B981" flood-opacity="0.82" />
-            </filter>
+            <!-- Glowing Neon Filters for Unlocked Organic Conduits & Nodes -->
             <filter id="glowCyan" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#0EA5E9" flood-opacity="0.82" />
+              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#00E5FF" flood-opacity="0.9" />
             </filter>
-            <filter id="glowRose" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#F43F5E" flood-opacity="0.82" />
+            <filter id="glowYellow" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#CCFF00" flood-opacity="0.9" />
+            </filter>
+            <filter id="glowBlue" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#0088FF" flood-opacity="0.9" />
+            </filter>
+            <filter id="glowRed" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#FF2A4D" flood-opacity="0.9" />
             </filter>
             <filter id="glowViolet" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#A855F7" flood-opacity="0.82" />
+              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#B026FF" flood-opacity="0.9" />
             </filter>
-            <filter id="glowBronze" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#F97316" flood-opacity="0.82" />
+            <filter id="glowOrange" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="6.0" flood-color="#FF6B00" flood-opacity="0.9" />
+            </filter>
+            <filter id="glowWhiteNode" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="0" stdDeviation="6.5" flood-color="#FFFFFF" flood-opacity="0.92" />
             </filter>
             <filter id="medallionShadow" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="4" stdDeviation="4.0" flood-color="#000000" flood-opacity="0.85" />
+              <feDropShadow dx="0" dy="4" stdDeviation="6.0" flood-color="#000000" flood-opacity="0.95" />
             </filter>
+            <!-- Prerequisite & Progression Arrowhead Markers -->
+            <marker id="arrowPrereqCyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#00E5FF" />
+            </marker>
+            <marker id="arrowPrereqGold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FACC15" />
+            </marker>
+            <marker id="arrowPrereqLocked" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#334155" />
+            </marker>
+            <marker id="arrowBranch0" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#00E5FF" />
+            </marker>
+            <marker id="arrowBranch1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#CCFF00" />
+            </marker>
+            <marker id="arrowBranch2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#0088FF" />
+            </marker>
+            <marker id="arrowBranch3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF2A4D" />
+            </marker>
+            <marker id="arrowBranch4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#B026FF" />
+            </marker>
+            <marker id="arrowBranch5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF6B00" />
+            </marker>
           </defs>
           <rect x="-600" y="-480" width="${w + 1200}" height="${h + 960}" fill="url(#torchGlowGrad)" />
-          <rect x="36" y="32" width="${w - 72}" height="${h - 64}" rx="32" fill="none" stroke="#6E5030" stroke-width="1.6" stroke-dasharray="18 10" opacity="0.25" />
-          <line x1="${cx}" y1="48" x2="${cx}" y2="${h - 48}" stroke="#4A3520" stroke-width="1" stroke-dasharray="6 12" opacity="0.14" />
+          <!-- Subtle Jedi Fallen Order Celestial Arc Lines & Astrometric Grid -->
+          <circle cx="${cx}" cy="${h + 200}" r="480" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="6 10" opacity="0.38" />
+          <circle cx="${cx}" cy="${h + 200}" r="750" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="8 12" opacity="0.32" />
+          <circle cx="${cx}" cy="${h + 200}" r="1020" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="10 16" opacity="0.28" />
+          <circle cx="${cx}" cy="${h + 200}" r="1300" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-dasharray="12 20" opacity="0.22" />
+          <line x1="${cx}" y1="40" x2="${cx}" y2="${h - 40}" stroke="#1E293B" stroke-width="1" stroke-dasharray="6 12" opacity="0.25" />
+          <!-- Celestial Coordinates & Sector Header -->
+          <text x="140" y="80" fill="#475569" font-family="ui-monospace, monospace" font-size="10" font-weight="bold" letter-spacing="2">SECTOR // CORE SKILL ATLAS</text>
+          <text x="${w - 320}" y="80" fill="#475569" font-family="ui-monospace, monospace" font-size="10" font-weight="bold" letter-spacing="2">41° 0' 3" N · 31° 10' 11" W</text>
+          <text x="${cx}" y="65" text-anchor="middle" fill="#64748B" font-family="ui-sans-serif, system-ui" font-size="11" font-weight="800" letter-spacing="3.5">ASCENDING SKILL TREE // ARCHITECTURE</text>
         `;
 
         // 1. Calculate Node Coordinates & Branch Bases in Ascending Organic Tree
@@ -6496,8 +6505,9 @@ export function initBackpackRuntime(): void {
           const trunkD = `M ${cx} ${rootTopY} C ${cx} ${(rootTopY + bb.baseY + 34) * 0.5}, ${bb.baseX.toFixed(1)} 1080, ${bb.baseX.toFixed(1)} ${(bb.baseY + 34).toFixed(1)}`;
           conduitsSvg += `
             <g class="${dimEdgeClass} ${hiEdgeClass}">
-              <path d="${trunkD}" fill="none" stroke="#090604" stroke-width="12" stroke-linecap="round" />
-              <path d="${trunkD}" fill="none" stroke="${palette.primary}" stroke-width="6.5" stroke-linecap="round" filter="url(#${palette.filterId})" />
+              <path d="${trunkD}" fill="none" stroke="#020408" stroke-width="12" stroke-linecap="round" />
+              <path d="${trunkD}" fill="none" stroke="${palette.primary}" stroke-width="6.8" stroke-linecap="round" filter="url(#${palette.filterId})" />
+              <path d="${trunkD}" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" />
             </g>
           `;
 
@@ -6505,8 +6515,9 @@ export function initBackpackRuntime(): void {
           const stemD = `M ${bb.baseX.toFixed(1)} ${(bb.baseY - 34).toFixed(1)} C ${bb.baseX.toFixed(1)} 920, ${n1.x.toFixed(1)} 880, ${n1.x.toFixed(1)} ${(n1.y + 26).toFixed(1)}`;
           conduitsSvg += `
             <g class="${dimEdgeClass} ${hiEdgeClass}">
-              <path d="${stemD}" fill="none" stroke="#090604" stroke-width="12" stroke-linecap="round" />
-              <path d="${stemD}" fill="none" stroke="${palette.primary}" stroke-width="6.5" stroke-linecap="round" filter="url(#${palette.filterId})" />
+              <path d="${stemD}" fill="none" stroke="#020408" stroke-width="12" stroke-linecap="round" />
+              <path d="${stemD}" fill="none" stroke="${palette.primary}" stroke-width="6.8" stroke-linecap="round" filter="url(#${palette.filterId})" />
+              <path d="${stemD}" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" />
             </g>
           `;
 
@@ -6522,23 +6533,25 @@ export function initBackpackRuntime(): void {
           if (g2Open) {
             conduitsSvg += `
               <g class="${dimEdgeClass} ${hiEdgeClass}">
-                <path d="${arcLeftD}" fill="none" stroke="#090604" stroke-width="11" stroke-linecap="round" />
-                <path d="${arcRightD}" fill="none" stroke="#090604" stroke-width="11" stroke-linecap="round" />
-                <path d="${arcLeftD}" fill="none" stroke="${palette.primary}" stroke-width="6.0" stroke-linecap="round" filter="url(#${palette.filterId})" />
-                <path d="${arcRightD}" fill="none" stroke="${palette.primary}" stroke-width="6.0" stroke-linecap="round" filter="url(#${palette.filterId})" />
-                <!-- Center Resonance Loop Node -->
-                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="7" fill="#120E0A" stroke="${palette.primary}" stroke-width="2" />
-                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="2.8" fill="${palette.glow}" />
+                <path d="${arcLeftD}" fill="none" stroke="#020408" stroke-width="11" stroke-linecap="round" />
+                <path d="${arcRightD}" fill="none" stroke="#020408" stroke-width="11" stroke-linecap="round" />
+                <path d="${arcLeftD}" fill="none" stroke="${palette.primary}" stroke-width="6.2" stroke-linecap="round" filter="url(#${palette.filterId})" />
+                <path d="${arcRightD}" fill="none" stroke="${palette.primary}" stroke-width="6.2" stroke-linecap="round" filter="url(#${palette.filterId})" />
+                <path d="${arcLeftD}" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" />
+                <path d="${arcRightD}" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" />
+                <!-- Center Resonance Crystal Node -->
+                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="7" fill="#040711" stroke="${palette.primary}" stroke-width="2.2" />
+                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="3" fill="#FFFFFF" />
               </g>
             `;
           } else {
             conduitsSvg += `
               <g class="${dimEdgeClass} ${hiEdgeClass}">
-                <path d="${arcLeftD}" fill="none" stroke="#090604" stroke-width="9" stroke-linecap="round" />
-                <path d="${arcRightD}" fill="none" stroke="#090604" stroke-width="9" stroke-linecap="round" />
-                <path d="${arcLeftD}" fill="none" stroke="#2B2018" stroke-width="4.5" stroke-dasharray="7 5" opacity="0.75" />
-                <path d="${arcRightD}" fill="none" stroke="#2B2018" stroke-width="4.5" stroke-dasharray="7 5" opacity="0.75" />
-                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="5" fill="#140E0A" stroke="#4A3522" stroke-width="1.6" />
+                <path d="${arcLeftD}" fill="none" stroke="#020408" stroke-width="9" stroke-linecap="round" />
+                <path d="${arcRightD}" fill="none" stroke="#020408" stroke-width="9" stroke-linecap="round" />
+                <path d="${arcLeftD}" fill="none" stroke="#1E293B" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.6" />
+                <path d="${arcRightD}" fill="none" stroke="#1E293B" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.6" />
+                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="5" fill="#070B14" stroke="#334155" stroke-width="1.6" />
               </g>
             `;
           }
@@ -6549,15 +6562,16 @@ export function initBackpackRuntime(): void {
           if (g3Open) {
             conduitsSvg += `
               <g class="${dimEdgeClass} ${hiEdgeClass}">
-                <path d="${stem3D}" fill="none" stroke="#090604" stroke-width="12" stroke-linecap="round" />
+                <path d="${stem3D}" fill="none" stroke="#020408" stroke-width="12" stroke-linecap="round" />
                 <path d="${stem3D}" fill="none" stroke="${palette.primary}" stroke-width="6.8" stroke-linecap="round" filter="url(#${palette.filterId})" marker-end="url(#${palette.arrowId})" />
+                <path d="${stem3D}" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" />
               </g>
             `;
           } else {
             conduitsSvg += `
               <g class="${dimEdgeClass} ${hiEdgeClass}">
-                <path d="${stem3D}" fill="none" stroke="#090604" stroke-width="9" stroke-linecap="round" />
-                <path d="${stem3D}" fill="none" stroke="#2B2018" stroke-width="4.5" stroke-dasharray="7 5" opacity="0.75" marker-end="url(#arrowPrereqLocked)" />
+                <path d="${stem3D}" fill="none" stroke="#020408" stroke-width="9" stroke-linecap="round" />
+                <path d="${stem3D}" fill="none" stroke="#1E293B" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.6" marker-end="url(#arrowPrereqLocked)" />
               </g>
             `;
           }
@@ -6584,11 +6598,11 @@ export function initBackpackRuntime(): void {
                 <g class="${isSelectedCrossEdge ? 'map-edge-highlighted' : ''}">
                   <path d="M ${src.x.toFixed(1)} ${src.y.toFixed(1)} Q ${ctrlX.toFixed(1)} ${ctrlY.toFixed(1)} ${endSeg.ex.toFixed(1)} ${endSeg.ey.toFixed(1)}"
                         fill="none"
-                        stroke="${satisfied ? '#22D3EE' : '#F59E0B'}"
+                        stroke="${satisfied ? '#00E5FF' : '#FACC15'}"
                         stroke-width="${isSelectedCrossEdge ? '3.5' : '2.4'}"
                         stroke-dasharray="${satisfied ? 'none' : '8 5'}"
                         marker-end="url(#${satisfied ? 'arrowPrereqCyan' : 'arrowPrereqGold'})"
-                        opacity="${isSelectedCrossEdge ? '0.96' : '0.62'}" />
+                        opacity="${isSelectedCrossEdge ? '0.98' : '0.65'}" />
                 </g>
               `;
             });
@@ -6611,9 +6625,9 @@ export function initBackpackRuntime(): void {
 
           branchBasesSvg += `
             <g transform="translate(${bb.baseX.toFixed(1)}, ${bb.baseY.toFixed(1)})" class="${branchDimClass}">
-              <rect x="-95" y="-32" width="190" height="64" rx="14" fill="#120D09" stroke="${isBranchSelected ? '#38BDF8' : (isBranchMastered ? palette.glow : palette.dark)}" stroke-width="${isBranchSelected ? '2.4' : '1.5'}" filter="url(#medallionShadow)" />
-              <text x="0" y="-12" text-anchor="middle" fill="${palette.primary}" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="900" letter-spacing="1.2">${escapeHtml(branch.name.toUpperCase())}</text>
-              <text x="0" y="18" text-anchor="middle" fill="${isBranchMastered ? '#FEF08A' : palette.glow}" font-family="ui-monospace, monospace" font-size="22" font-weight="900">${isBranchMastered ? '👑 ' : '★ '}${bStars}/15</text>
+              <rect x="-95" y="-32" width="190" height="64" rx="14" fill="#060912" stroke="${isBranchSelected ? '#00E5FF' : (isBranchMastered ? '#FFFFFF' : '#1E293B')}" stroke-width="${isBranchSelected ? '2.4' : '1.5'}" filter="url(#medallionShadow)" />
+              <text x="0" y="-12" text-anchor="middle" fill="${isBranchSelected ? '#00E5FF' : '#94A3B8'}" font-family="ui-sans-serif, system-ui" font-size="10" font-weight="800" letter-spacing="2.2">${escapeHtml(branch.name.toUpperCase())}</text>
+              <text x="0" y="18" text-anchor="middle" fill="${isBranchMastered ? '#FFFFFF' : palette.glow}" font-family="ui-monospace, monospace" font-size="20" font-weight="900">${isBranchMastered ? '👑 ' : '★ '}${bStars}/15</text>
             </g>
           `;
         });
@@ -6631,16 +6645,15 @@ export function initBackpackRuntime(): void {
 
         // 6. Central Root Domain Totem Medallion at Bottom
         const coreUnlocked = coreLevel !== null;
-        const coreBorder = coreUnlocked ? coreMastery.barColor : '#A8763E';
         const coreSvg = `
           <g filter="url(#medallionShadow)" class="cursor-pointer" data-core-medallion="true">
             <title>Inti Domain: ${escapeHtml(cat.name)} (${coreUnlocked ? 'Level ' + coreLevel + '/5 · ' + coreMastery.label : 'Belum Dinilai'}) — Klik untuk Reset Tampilan</title>
-            <circle cx="${cx}" cy="1165" r="50" fill="#150E0A" stroke="${coreBorder}" stroke-width="4.0" />
-            <circle cx="${cx}" cy="1165" r="42" fill="#1C140E" stroke="#F59E0B" stroke-width="1.6" stroke-dasharray="6 4" />
-            <text x="${cx}" y="${1165 - 15}" text-anchor="middle" fill="#A89984" font-family="ui-monospace, monospace" font-size="8.5" font-weight="bold">INTI DOMAIN</text>
-            <text x="${cx}" y="${1165 + 2}" text-anchor="middle" fill="#FFF8EB" font-family="Plus Jakarta Sans, sans-serif" font-size="14" font-weight="extrabold">${escapeHtml(cat.shortTag.toUpperCase())}</text>
-            <text x="${cx}" y="${1165 + 18}" text-anchor="middle" fill="#FDE047" font-family="ui-monospace, monospace" font-size="12" font-weight="extrabold">${coreUnlocked ? '★ Lv.' + coreLevel + '/5' : 'Belum Dinilai'}</text>
-            <text x="${cx}" y="${1165 + 32}" text-anchor="middle" fill="#F59E0B" font-family="ui-monospace, monospace" font-size="9" font-weight="bold">${evo.shortBadge}</text>
+            <circle cx="${cx}" cy="1165" r="50" fill="#060912" stroke="#00E5FF" stroke-width="3.5" filter="url(#glowCyan)" />
+            <circle cx="${cx}" cy="1165" r="42" fill="#0A0F1D" stroke="#FFFFFF" stroke-width="1.6" stroke-dasharray="6 4" opacity="0.8" />
+            <text x="${cx}" y="${1165 - 15}" text-anchor="middle" fill="#64748B" font-family="ui-monospace, monospace" font-size="8.5" font-weight="bold" letter-spacing="1.5">INTI DOMAIN</text>
+            <text x="${cx}" y="${1165 + 2}" text-anchor="middle" fill="#FFFFFF" font-family="ui-sans-serif, system-ui" font-size="14" font-weight="900" letter-spacing="1">${escapeHtml(cat.shortTag.toUpperCase())}</text>
+            <text x="${cx}" y="${1165 + 18}" text-anchor="middle" fill="#00E5FF" font-family="ui-monospace, monospace" font-size="12" font-weight="extrabold">${coreUnlocked ? '★ Lv.' + coreLevel + '/5' : 'Belum Dinilai'}</text>
+            <text x="${cx}" y="${1165 + 32}" text-anchor="middle" fill="#94A3B8" font-family="ui-monospace, monospace" font-size="8.5" font-weight="bold">${evo.shortBadge}</text>
           </g>
         `;
 
