@@ -1982,3 +1982,40 @@ html.dark .dark\:text-\[\#FCA5A5\] { color: #FCA5A5; }
         max-width: calc(100% - 0.75rem) !important;
       }
     }
+
+/* ========================================================================= */
+/* Apple iOS Luxury Floating Glassmorphic Popovers & Spring Animations       */
+/* ========================================================================= */
+.prasasti-domain-popover {
+  margin: 0;
+  position: absolute;
+  top: 4.25rem;
+  left: 1.5rem;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  animation: applePopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes applePopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+#selectMapDomainQuick option {
+  background-color: #0B0F19 !important;
+  color: #FFFFFF !important;
+  padding: 8px 12px !important;
+}
+
+#stoneInspectorCollapsibleBody {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#stoneNodeInspectorBox {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
