@@ -5755,151 +5755,266 @@ export function initBackpackRuntime(): void {
       }
 
       // =====================================================================
-      // P0 #3.2, #3.3, P1 #4.2 & #7.1-7.3: EXPLICIT 6-STATE STONE & GEMSTONE SVG
-      // States: Selected (🎯 DIPILIH), Prerequisite of Selected (🔗 PRASYARAT),
-      //         Mastered (👑 5/5), Assessed (★ Lv.1-4/5), Available (✦ Siap Dinilai),
-      //         Locked (🔒 Terkunci).
+      // PRASASTI SKILL ATLAS: ASCENDING ORGANIC SKILL TREE PALETTES & NODES
+      // Features: Circular Keystones (Tier 1 r=26, Tier 2 r=30, Tier 3 r=35),
+      //           Thematic Vector Glyphs, Attached Score Micro-Pills (1/5..5/5),
+      //           Attached Lock Badges 🔒, Dark Subtitle Pills, and Branch Themes.
       // =====================================================================
+      const BRANCH_PALETTES = [
+        // Branch 0: Warm Solar Amber / Gold
+        {
+          id: 0,
+          primary: '#F59E0B',
+          glow: '#FDE047',
+          dark: '#78350F',
+          bgDark: '#211508',
+          rimLocked: '#543D22',
+          filterId: 'glowAmber',
+          arrowId: 'arrowBranch0'
+        },
+        // Branch 1: Forest Emerald / Jade
+        {
+          id: 1,
+          primary: '#10B981',
+          glow: '#6EE7B7',
+          dark: '#064E3B',
+          bgDark: '#072418',
+          rimLocked: '#204738',
+          filterId: 'glowEmerald',
+          arrowId: 'arrowBranch1'
+        },
+        // Branch 2: Royal Sapphire / Sky Cyan
+        {
+          id: 2,
+          primary: '#0EA5E9',
+          glow: '#7DD3FC',
+          dark: '#0C4A6E',
+          bgDark: '#082333',
+          rimLocked: '#23445A',
+          filterId: 'glowCyan',
+          arrowId: 'arrowBranch2'
+        },
+        // Branch 3: Ruby Rose / Crimson
+        {
+          id: 3,
+          primary: '#F43F5E',
+          glow: '#FDA4AF',
+          dark: '#881337',
+          bgDark: '#280A13',
+          rimLocked: '#562532',
+          filterId: 'glowRose',
+          arrowId: 'arrowBranch3'
+        },
+        // Branch 4: Amethyst Violet
+        {
+          id: 4,
+          primary: '#A855F7',
+          glow: '#E9D5FF',
+          dark: '#581C87',
+          bgDark: '#1E0E33',
+          rimLocked: '#4C2870',
+          filterId: 'glowViolet',
+          arrowId: 'arrowBranch4'
+        },
+        // Branch 5: Coral Bronze
+        {
+          id: 5,
+          primary: '#F97316',
+          glow: '#FED7AA',
+          dark: '#7C2D12',
+          bgDark: '#281308',
+          rimLocked: '#572E1B',
+          filterId: 'glowBronze',
+          arrowId: 'arrowBranch5'
+        }
+      ];
+
+      function getBranchBaseX(bIdx, totalBranches) {
+        if (totalBranches <= 1) return PRASASTI_CX;
+        const leftMargin = totalBranches >= 5 ? 230 : 270;
+        const rightMargin = totalBranches >= 5 ? 230 : 270;
+        const usableWidth = PRASASTI_SVG_W - leftMargin - rightMargin;
+        return leftMargin + (bIdx / (totalBranches - 1)) * usableWidth;
+      }
+
+      function renderNodeVectorIcon(title, tierIdx, isFilled, strokeColor, fillColor) {
+        const lower = (title || '').toLowerCase();
+        // Tier 3: Pinnacle Sage Keystone Crown
+        if (tierIdx === 2) {
+          return `
+            <path d="M -13 8 L -15 -5 L -6 0 L 0 -11 L 6 0 L 15 -5 L 13 8 Z" fill="${isFilled ? fillColor : 'none'}" stroke="${strokeColor}" stroke-width="2.4" stroke-linejoin="round" />
+            <circle cx="-15" cy="-5" r="1.6" fill="${strokeColor}" />
+            <circle cx="0" cy="-11" r="2.0" fill="${strokeColor}" />
+            <circle cx="15" cy="-5" r="1.6" fill="${strokeColor}" />
+          `;
+        }
+        // Reading, Exegesis, Scripture, Book, Log
+        if (lower.includes('read') || lower.includes('exeg') || lower.includes('script') || lower.includes('book') || lower.includes('log')) {
+          return `
+            <path d="M 0 -7 C 4 -9, 8 -9, 12 -7 L 12 7 C 8 5, 4 5, 0 7 C -4 5, -8 5, -12 7 L -12 -7 C -8 -9, -4 -9, 0 -7 Z" fill="${isFilled ? fillColor : 'none'}" stroke="${strokeColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="0" y1="-7" x2="0" y2="7" stroke="${strokeColor}" stroke-width="2.0" />
+          `;
+        }
+        // Worship, Sacred Heart, Wellness, Emotion, Ministry
+        if (lower.includes('worship') || lower.includes('well') || lower.includes('heart') || lower.includes('emot') || lower.includes('spirit') || lower.includes('care')) {
+          return `
+            <path d="M 0 10 C -9 4, -11 -4, -6 -8 C -2 -10, 0 -6, 0 -4 C 0 -6, 2 -10, 6 -8 C 11 -4, 9 4, 0 10 Z" fill="${isFilled ? fillColor : 'none'}" stroke="${strokeColor}" stroke-width="2.2" stroke-linejoin="round" />
+            <path d="M 0 -2 L 0 5 M -3 2 L 3 2" stroke="${strokeColor}" stroke-width="1.8" stroke-linecap="round" />
+          `;
+        }
+        // Shield, Protection, Discipline, Ethics, Resistance
+        if (lower.includes('shield') || lower.includes('discipl') || lower.includes('ethic') || lower.includes('secur') || lower.includes('protect') || lower.includes('resist')) {
+          return `
+            <path d="M 0 -11 C 7 -11, 11 -8, 11 -3 C 11 5, 6 10, 0 13 C -6 10, -11 5, -11 -3 C -11 -8, -7 -11, 0 -11 Z" fill="${isFilled ? fillColor : 'none'}" stroke="${strokeColor}" stroke-width="2.2" stroke-linejoin="round" />
+            <line x1="0" y1="-8" x2="0" y2="9" stroke="${strokeColor}" stroke-width="1.8" />
+          `;
+        }
+        // Wing / Feather, Agility, Mobility, Movement
+        if (lower.includes('mobil') || lower.includes('agil') || lower.includes('wing') || lower.includes('feath') || lower.includes('adapt') || lower.includes('swift')) {
+          return `
+            <path d="M -10 10 C -4 3, 0 -2, 11 -10 C 11 -4, 8 2, 2 6 C -2 9, -7 10, -10 10 Z" fill="${isFilled ? fillColor : 'none'}" stroke="${strokeColor}" stroke-width="2.2" stroke-linejoin="round" />
+            <path d="M 0 1 L -5 6" stroke="${strokeColor}" stroke-width="1.8" stroke-linecap="round" />
+          `;
+        }
+        // Interpretation, Discernment, Vision, Eye, Analysis
+        if (lower.includes('interp') || lower.includes('discern') || lower.includes('eye') || lower.includes('vis') || lower.includes('analy') || lower.includes('psych') || lower.includes('observ')) {
+          return `
+            <path d="M -11 0 C -7 7, 7 7, 11 0 C 7 -7, -7 -7, -11 0 Z" fill="${isFilled ? fillColor : 'none'}" stroke="${strokeColor}" stroke-width="2.2" />
+            <circle cx="0" cy="0" r="3.2" fill="${strokeColor}" />
+          `;
+        }
+        // Communication, Sharing, Dialogue, Teaching, Articulation
+        if (lower.includes('comm') || lower.includes('shar') || lower.includes('teach') || lower.includes('speech') || lower.includes('articul') || lower.includes('dialog')) {
+          return `
+            <path d="M -9 4 L -9 -6 C -9 -8, -7 -10, -5 -10 L 5 -10 C 7 -10, 9 -8, 9 -6 L 9 2 C 9 4, 7 6, 5 6 L -3 6 L -7 9 L -7 6 L -9 6 Z" fill="${isFilled ? fillColor : 'none'}" stroke="${strokeColor}" stroke-width="2.2" stroke-linejoin="round" />
+            <circle cx="-3" cy="-2" r="1.2" fill="${strokeColor}" />
+            <circle cx="1" cy="-2" r="1.2" fill="${strokeColor}" />
+            <circle cx="5" cy="-2" r="1.2" fill="${strokeColor}" />
+          `;
+        }
+        // Tech, Logic, Coding, System, Engineering, Spark
+        if (lower.includes('tech') || lower.includes('code') || lower.includes('system') || lower.includes('eng') || lower.includes('logic') || lower.includes('spark')) {
+          return `
+            <path d="M 2 -11 L -7 0 L 0 0 L -2 11 L 7 0 L 0 0 Z" fill="${isFilled ? fillColor : 'none'}" stroke="${strokeColor}" stroke-width="2.2" stroke-linejoin="round" />
+          `;
+        }
+        // Fallback / Progression: Double Forward Velocity Chevrons
+        return `
+          <path d="M -6 -7 L 1 0 L -6 7 M 0 -7 L 7 0 L 0 7" fill="none" stroke="${strokeColor}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+        `;
+      }
+
       function buildTexturedStoneNodeSvg(nc, isUnlocked, isAssessed, isInspected, prereqInfoForSelected, isLineageRelevant, highlightLineageActive) {
         const x = nc.x;
         const y = nc.y;
         const lvl = isAssessed ? nc.lvl : 0;
-        const baseR = nc.tIdx === 2 ? 32 : (nc.tIdx === 1 ? 29 : 26);
-        const seed = (nc.flatIdx + 1) * 17 + (nc.bIdx + 1) * 31;
+        const baseR = nc.tIdx === 2 ? 35 : (nc.tIdx === 1 ? 30 : 26);
+        const palette = BRANCH_PALETTES[nc.bIdx % BRANCH_PALETTES.length];
 
-        function rockPolygonPoints(radius, irregularity) {
-          const pts = [];
-          const verts = 10;
-          for (let i = 0; i < verts; i++) {
-            const ang = (i / verts) * Math.PI * 2 - Math.PI / 2;
-            const wave = Math.sin(seed + i * 2.3) * irregularity + Math.cos(seed * 0.7 + i * 3.1) * (irregularity * 0.6);
-            const r = radius * (1 + wave);
-            pts.push(`${(x + Math.cos(ang) * r).toFixed(1)},${(y + Math.sin(ang) * r).toFixed(1)}`);
-          }
-          return pts.join(' ');
-        }
-
-        const outerStonePts = rockPolygonPoints(baseR, !isUnlocked ? 0.14 : (lvl >= 4 ? 0.08 : 0.12));
-        const midBevelPts = rockPolygonPoints(baseR * 0.78, 0.10);
-        const innerCorePts = rockPolygonPoints(baseR * 0.54, 0.07);
-
-        const c1x = (x - baseR * 0.62).toFixed(1), c1y = (y - baseR * 0.34).toFixed(1);
-        const c2x = (x - baseR * 0.14).toFixed(1), c2y = (y - baseR * 0.10).toFixed(1);
-        const c3x = (x + baseR * 0.54).toFixed(1), c3y = (y + baseR * 0.40).toFixed(1);
-        const c4x = (x - baseR * 0.42).toFixed(1), c4y = (y + baseR * 0.50).toFixed(1);
-        const c5x = (x + baseR * 0.18).toFixed(1), c5y = (y + baseR * 0.14).toFixed(1);
-        const c6x = (x + baseR * 0.58).toFixed(1), c6y = (y - baseR * 0.45).toFixed(1);
-
-        let outerFill = 'url(#stoneSlateGrad)';
-        let midFill = '#36281B';
-        let coreFill = '#231911';
-        let rimStroke = '#785734';
-        let rimWidth = 2.2;
-        let luxuryCrystalsSvg = '';
-        let luxuryHaloSvg = '';
+        let circleFill = palette.bgDark;
+        let circleStroke = palette.primary;
+        let strokeW = 3.0;
+        let iconStroke = palette.glow;
+        let iconFill = 'none';
+        let isFilledGlyph = false;
+        let filterAttr = '';
 
         if (!isUnlocked) {
-          outerFill = 'url(#stoneLockedBasaltGrad)';
-          midFill = '#1A1410';
-          coreFill = '#0E0A08';
-          rimStroke = '#6E5030';
-          rimWidth = 1.8;
+          // Locked State: Sleek Dark Slate
+          circleFill = '#17110C';
+          circleStroke = '#3D2A1C';
+          strokeW = 2.0;
+          iconStroke = '#785A3C';
+          iconFill = 'none';
         } else if (!isAssessed) {
-          // Available / Ready to Assess State (Clear inviting emerald-teal rim!)
-          outerFill = 'url(#stoneSlateGrad)';
-          midFill = '#1F3A33';
-          coreFill = '#122620';
-          rimStroke = '#34D399';
-          rimWidth = 2.6;
-        } else if (lvl === 1) {
-          outerFill = 'url(#stoneSandstoneLv1Grad)';
-          midFill = '#6E4220';
-          coreFill = '#4A2B13';
-          rimStroke = '#F59E0B';
-          rimWidth = 2.6;
-        } else if (lvl === 2) {
-          outerFill = 'url(#stoneJadeLv2Grad)';
-          midFill = '#155E4B';
-          coreFill = '#0B3B2E';
-          rimStroke = '#34D399';
-          rimWidth = 2.8;
-        } else if (lvl === 3) {
-          outerFill = 'url(#stoneLapisLv3Grad)';
-          midFill = '#1E3A8A';
-          coreFill = 'url(#gemBasicGrad)';
-          rimStroke = '#38BDF8';
-          rimWidth = 3.2;
-          const r = baseR;
-          luxuryCrystalsSvg = `
-            <polygon points="${(x - r - 8).toFixed(1)},${(y - 3).toFixed(1)} ${(x - r + 2).toFixed(1)},${(y - 11).toFixed(1)} ${(x - r + 1).toFixed(1)},${(y + 5).toFixed(1)}" fill="url(#gemBasicGrad)" stroke="#E0F2FE" stroke-width="1.1" />
-            <polygon points="${(x + r + 8).toFixed(1)},${(y - 3).toFixed(1)} ${(x + r - 2).toFixed(1)},${(y - 11).toFixed(1)} ${(x + r - 1).toFixed(1)},${(y + 5).toFixed(1)}" fill="url(#gemBasicGrad)" stroke="#E0F2FE" stroke-width="1.1" />
-          `;
-        } else if (lvl === 4) {
-          outerFill = 'url(#stonePorphyryLv4Grad)';
-          midFill = '#581C87';
-          coreFill = 'url(#gemSapphireRoyalGrad)';
-          rimStroke = '#E879F9';
-          rimWidth = 3.5;
-          const r = baseR;
-          luxuryCrystalsSvg = `
-            <polygon points="${(x - r - 8).toFixed(1)},${(y - r + 4).toFixed(1)} ${(x - r + 5).toFixed(1)},${(y - r - 7).toFixed(1)} ${(x - r + 7).toFixed(1)},${(y - r + 9).toFixed(1)}" fill="url(#gemSapphireRoyalGrad)" stroke="#F5D0FE" stroke-width="1.2" />
-            <polygon points="${(x + r + 8).toFixed(1)},${(y - r + 4).toFixed(1)} ${(x + r - 5).toFixed(1)},${(y - r - 7).toFixed(1)} ${(x + r - 7).toFixed(1)},${(y - r + 9).toFixed(1)}" fill="url(#gemSapphireRoyalGrad)" stroke="#F5D0FE" stroke-width="1.2" />
-          `;
-        } else if (lvl >= 5) {
-          outerFill = 'url(#stoneObsidianLv5Grad)';
-          midFill = 'url(#gemMasteryGold)';
-          coreFill = 'url(#gemSageGrad)';
-          rimStroke = '#FDE047';
-          rimWidth = 3.8;
-          const r = baseR;
-          luxuryHaloSvg = `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(r + 9).toFixed(1)}" fill="none" stroke="#FDE047" stroke-width="2.0" opacity="0.88" />`;
-          let spikes = '';
-          for (let s = 0; s < 6; s++) {
-            const sa = (s / 6) * Math.PI * 2 - Math.PI / 2;
-            const tipX = x + Math.cos(sa) * (r + 11);
-            const tipY = y + Math.sin(sa) * (r + 11);
-            const b1X = x + Math.cos(sa - 0.20) * (r - 2);
-            const b1Y = y + Math.sin(sa - 0.20) * (r - 2);
-            const b2X = x + Math.cos(sa + 0.20) * (r - 2);
-            const b2Y = y + Math.sin(sa + 0.20) * (r - 2);
-            const spFill = s % 2 === 0 ? 'url(#gemSageGrad)' : 'url(#gemBasicGrad)';
-            spikes += `<polygon points="${tipX.toFixed(1)},${tipY.toFixed(1)} ${b1X.toFixed(1)},${b1Y.toFixed(1)} ${b2X.toFixed(1)},${b2Y.toFixed(1)}" fill="${spFill}" stroke="#FEF08A" stroke-width="1.1" />`;
-          }
-          luxuryCrystalsSvg = `${spikes}`;
+          // Available / Ready to Assess State (Inviting glowing ring)
+          circleFill = palette.bgDark;
+          circleStroke = palette.primary;
+          strokeW = 3.2;
+          iconStroke = palette.glow;
+          iconFill = 'none';
+          filterAttr = `filter="url(#${palette.filterId})"`;
+        } else {
+          // Assessed / Active Milestone State (Filled vibrant circular jewel)
+          circleFill = palette.primary;
+          circleStroke = palette.glow;
+          strokeW = 2.8;
+          iconStroke = palette.dark;
+          iconFill = palette.dark;
+          isFilledGlyph = true;
+          filterAttr = `filter="url(#${palette.filterId})"`;
         }
 
-        // P0 #3.2: Unambiguous Solid Double Selection Halo (White + Cyan) vs Prerequisite Badge
-        const inspectRingSvg = isInspected
-          ? `
-            <circle data-inspect-ring="${nc.flatIdx}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 16).toFixed(1)}" fill="none" stroke="#38BDF8" stroke-width="2.6" opacity="0.95" />
-            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 11).toFixed(1)}" fill="none" stroke="#FFFFFF" stroke-width="3.0" opacity="1" />
-          `
-          : (prereqInfoForSelected
-            ? `<circle data-inspect-ring="${nc.flatIdx}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 13).toFixed(1)}" fill="none" stroke="${prereqInfoForSelected.satisfied ? '#34D399' : '#F59E0B'}" stroke-width="2.6" stroke-dasharray="6 3" opacity="0.95" />`
-            : `<circle data-inspect-ring="${nc.flatIdx}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 14).toFixed(1)}" fill="none" stroke="#FFFFFF" stroke-width="0" opacity="0" />`
-          );
+        // Thematic vector glyph inside the circle
+        const iconSvg = `
+          <g transform="translate(${x.toFixed(1)}, ${y.toFixed(1)})">
+            ${renderNodeVectorIcon(nc.node.title, nc.tIdx, isFilledGlyph, iconStroke, iconFill)}
+          </g>
+        `;
 
-        // Top contextual role badge above the stone (🎯 DIPILIH, 🔗 SYARAT, or 👑 MASTERY)
+        // Attached Micro-Pill / Score Badge or Lock Badge
+        let attachedBadgeSvg = '';
+        if (!isUnlocked) {
+          // Lock badge attached at top-left edge of the circle (matching reference image)
+          const lockX = x - baseR * 0.70;
+          const lockY = y - baseR * 0.65;
+          attachedBadgeSvg = `
+            <g transform="translate(${lockX.toFixed(1)}, ${lockY.toFixed(1)})" filter="url(#medallionShadow)">
+              <circle cx="0" cy="0" r="11.5" fill="#140E0A" stroke="#78350F" stroke-width="1.8" />
+              <text x="0" y="3.5" text-anchor="middle" font-size="10.5">🔒</text>
+            </g>
+          `;
+        } else if (isAssessed) {
+          // Score micro-pill at bottom-right edge of the circle: (1/5), (3/5), (5/5)
+          const pillX = x + baseR * 0.72;
+          const pillY = y + baseR * 0.65;
+          attachedBadgeSvg = `
+            <g transform="translate(${pillX.toFixed(1)}, ${pillY.toFixed(1)})" filter="url(#medallionShadow)">
+              <circle cx="0" cy="0" r="11.5" fill="#120E0A" stroke="${palette.primary}" stroke-width="2.0" />
+              <text x="0" y="3.5" text-anchor="middle" fill="${palette.glow}" font-family="ui-monospace, monospace" font-size="9" font-weight="900">${lvl}/5</text>
+            </g>
+          `;
+        } else {
+          // Unassessed / ready to assess micro-pill
+          const pillX = x + baseR * 0.72;
+          const pillY = y + baseR * 0.65;
+          attachedBadgeSvg = `
+            <g transform="translate(${pillX.toFixed(1)}, ${pillY.toFixed(1)})" filter="url(#medallionShadow)">
+              <circle cx="0" cy="0" r="11" fill="#120E0A" stroke="#34D399" stroke-width="1.8" />
+              <text x="0" y="3.5" text-anchor="middle" fill="#6EE7B7" font-family="ui-monospace, monospace" font-size="10" font-weight="900">✦</text>
+            </g>
+          `;
+        }
+
+        // Selection double ring halo (🎯 DIPILIH)
+        let inspectRingSvg = '';
         let topRoleBadgeSvg = '';
         if (isInspected) {
+          inspectRingSvg = `
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 15).toFixed(1)}" fill="none" stroke="#38BDF8" stroke-width="2.6" opacity="0.95" />
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 9).toFixed(1)}" fill="none" stroke="#FFFFFF" stroke-width="3.0" opacity="1" />
+          `;
           topRoleBadgeSvg = `
-            <rect x="${(x - 42).toFixed(1)}" y="${(y - baseR - 28).toFixed(1)}" width="84" height="17" rx="8.5" fill="#0284C7" stroke="#FFFFFF" stroke-width="1.4" />
-            <text x="${x.toFixed(1)}" y="${(y - baseR - 16.5).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="9.5" font-weight="extrabold">🎯 DIPILIH</text>
+            <rect x="${(x - 42).toFixed(1)}" y="${(y - baseR - 24).toFixed(1)}" width="84" height="17" rx="8.5" fill="#0284C7" stroke="#FFFFFF" stroke-width="1.4" filter="url(#medallionShadow)" />
+            <text x="${x.toFixed(1)}" y="${(y - baseR - 12.5).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="9.5" font-weight="extrabold">🎯 DIPILIH</text>
           `;
         } else if (prereqInfoForSelected) {
           const reqCol = prereqInfoForSelected.satisfied ? '#059669' : '#D97706';
           const reqTxt = prereqInfoForSelected.satisfied
             ? `✓ SYARAT (${prereqInfoForSelected.currentScore}/${prereqInfoForSelected.requiredScore})`
             : `🔗 SYARAT (≥${prereqInfoForSelected.requiredScore}/5)`;
+          inspectRingSvg = `
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR + 12).toFixed(1)}" fill="none" stroke="${prereqInfoForSelected.satisfied ? '#34D399' : '#F59E0B'}" stroke-width="2.6" stroke-dasharray="6 3" opacity="0.95" />
+          `;
           topRoleBadgeSvg = `
-            <rect x="${(x - 54).toFixed(1)}" y="${(y - baseR - 27).toFixed(1)}" width="108" height="17" rx="8.5" fill="${reqCol}" stroke="#FEF08A" stroke-width="1.3" />
-            <text x="${x.toFixed(1)}" y="${(y - baseR - 15.5).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="9" font-weight="extrabold">${reqTxt}</text>
+            <rect x="${(x - 54).toFixed(1)}" y="${(y - baseR - 24).toFixed(1)}" width="108" height="17" rx="8.5" fill="${reqCol}" stroke="#FEF08A" stroke-width="1.3" filter="url(#medallionShadow)" />
+            <text x="${x.toFixed(1)}" y="${(y - baseR - 12.5).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-family="ui-monospace, monospace" font-size="9" font-weight="extrabold">${reqTxt}</text>
           `;
         } else if (lvl >= 5) {
-          topRoleBadgeSvg = `<text x="${x.toFixed(1)}" y="${(y - baseR - 11).toFixed(1)}" text-anchor="middle" font-size="15">👑</text>`;
+          topRoleBadgeSvg = `<text x="${x.toFixed(1)}" y="${(y - baseR - 11).toFixed(1)}" text-anchor="middle" font-size="16">👑</text>`;
         }
 
-        // P1 #4.2 & #7.3: Clear, High-Contrast Status Text on Label Pill (Replaces ambiguous 5-star row!)
+        // Subtitle status line
         const masteryLabels = ['', 'Exposure', 'Foundation', 'Competence', 'Advanced', 'Mastery'];
         let statusLineText = '';
         let statusLineColor = '#D6C7B2';
@@ -5918,18 +6033,16 @@ export function initBackpackRuntime(): void {
           statusLineColor = '#FDE047';
         }
 
-        const tierSym = nc.tIdx === 0 ? '🌱' : (nc.tIdx === 1 ? '🔥' : '👑');
         const fullTitle = nc.node.title;
         const shortName = fullTitle.length > 22 ? fullTitle.slice(0, 21) + '…' : fullTitle;
-        const labelWidth = Math.max(134, Math.min(182, Math.max(shortName.length * 7.4, statusLineText.length * 6.2) + 22));
-        // Clamp pillX & pillY inside safe canvas margins so no label ever touches the edge (P0 #3.3)
-        const rawPillX = nc.labelX !== undefined ? nc.labelX : x;
-        const rawPillY = nc.labelY !== undefined ? nc.labelY : (y + baseR + 9);
-        const pillX = Math.max(labelWidth / 2 + 24, Math.min(PRASASTI_SVG_W - labelWidth / 2 - 24, rawPillX));
-        const pillY = Math.max(24, Math.min(PRASASTI_SVG_H - 48, rawPillY));
+        const labelWidth = Math.max(130, Math.min(180, Math.max(shortName.length * 7.4, statusLineText.length * 6.2) + 22));
+
+        const rawPillX = x;
+        const rawPillY = y + baseR + 15;
+        const pillX = Math.max(labelWidth / 2 + 20, Math.min(PRASASTI_SVG_W - labelWidth / 2 - 20, rawPillX));
+        const pillY = Math.max(20, Math.min(PRASASTI_SVG_H - 45, rawPillY));
 
         const dimClass = (highlightLineageActive && !isLineageRelevant) ? 'map-node-dimmed' : '';
-        // P1 #4.1 & #7.2: Selective glow only on Selected or Mastered (Lv.5)
         const glowClass = (isInspected || lvl >= 5) ? 'stone-node-mastered' : '';
         const ariaStatus = !isUnlocked ? `Terkunci (${nc.gate.gateFormula})` : (isAssessed ? `Skor ${lvl} dari 5` : 'Terbuka dan siap dinilai');
 
@@ -5941,17 +6054,15 @@ export function initBackpackRuntime(): void {
              aria-label="${escapeHtml(nc.node.branchName)} — ${escapeHtml(nc.node.title)}, Tier ${nc.tIdx + 1}, ${escapeHtml(ariaStatus)}"
              filter="url(#medallionShadow)">
             <title>${escapeHtml(nc.node.branchName)} · ${escapeHtml(nc.node.title)} (${escapeHtml(ariaStatus)})</title>
-            ${luxuryHaloSvg}
             ${inspectRingSvg}
-            ${luxuryCrystalsSvg}
             ${topRoleBadgeSvg}
-            <polygon points="${outerStonePts}" fill="${outerFill}" stroke="${isInspected ? '#FFFFFF' : rimStroke}" stroke-width="${isInspected ? '3.6' : rimWidth}" />
-            <polygon points="${midBevelPts}" fill="${midFill}" stroke="${isAssessed && lvl >= 3 ? '#FEF08A' : '#1C130C'}" stroke-width="1.2" />
-            <path d="M ${c1x} ${c1y} L ${c2x} ${c2y} L ${c3x} ${c3y} M ${c4x} ${c4y} L ${c5x} ${c5y} L ${c6x} ${c6y}" fill="none" stroke="${lvl >= 3 ? 'rgba(255,255,255,0.42)' : 'rgba(0,0,0,0.55)'}" stroke-width="1.3" stroke-linecap="round" />
-            <polygon points="${innerCorePts}" fill="${coreFill}" stroke="${isAssessed ? '#FFF8EB' : (isUnlocked ? '#34D399' : '#5C4328')}" stroke-width="${isAssessed ? '1.5' : '1.1'}" />
-            <text x="${x.toFixed(1)}" y="${(y - 2).toFixed(1)}" text-anchor="middle" fill="${!isUnlocked ? '#D6C7B2' : '#FFFFFF'}" font-family="ui-monospace, monospace" font-size="10.5" font-weight="bold">${tierSym}T${nc.tIdx + 1}</text>
-            <text x="${x.toFixed(1)}" y="${(y + 11.5).toFixed(1)}" text-anchor="middle" fill="${!isUnlocked ? '#FCA5A5' : (isAssessed ? '#FEF08A' : '#6EE7B7')}" font-family="ui-monospace, monospace" font-size="10.5" font-weight="extrabold">${!isUnlocked ? '🔒' : (isAssessed ? `${lvl}/5` : '✦')}</text>
-            <rect x="${(pillX - labelWidth / 2).toFixed(1)}" y="${pillY.toFixed(1)}" width="${labelWidth.toFixed(1)}" height="31" rx="8" fill="#140E0A" stroke="${isInspected ? '#38BDF8' : (prereqInfoForSelected ? '#F59E0B' : (isUnlocked ? rimStroke : '#5C4328'))}" stroke-width="${isInspected || prereqInfoForSelected ? '2.2' : '1.4'}" />
+            <!-- Main Circular Node -->
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${baseR}" fill="${circleFill}" stroke="${isInspected ? '#FFFFFF' : circleStroke}" stroke-width="${isInspected ? '3.6' : strokeW}" ${filterAttr} />
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(baseR - 3.5).toFixed(1)}" fill="none" stroke="${isAssessed ? palette.glow : palette.primary}" stroke-width="1.0" opacity="0.45" />
+            ${iconSvg}
+            ${attachedBadgeSvg}
+            <!-- Label Pill Below Node -->
+            <rect x="${(pillX - labelWidth / 2).toFixed(1)}" y="${pillY.toFixed(1)}" width="${labelWidth.toFixed(1)}" height="31" rx="8" fill="#140E0A" stroke="${isInspected ? '#38BDF8' : (prereqInfoForSelected ? '#F59E0B' : (isUnlocked ? palette.primary : '#4A3522'))}" stroke-width="${isInspected || prereqInfoForSelected ? '2.2' : '1.4'}" filter="url(#medallionShadow)" />
             <text x="${pillX.toFixed(1)}" y="${(pillY + 13).toFixed(1)}" text-anchor="middle" fill="#FFF8EB" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="extrabold">${escapeHtml(shortName)}</text>
             <text x="${pillX.toFixed(1)}" y="${(pillY + 25).toFixed(1)}" text-anchor="middle" fill="${statusLineColor}" font-family="ui-monospace, monospace" font-size="9.5" font-weight="bold">${escapeHtml(statusLineText)}</text>
           </g>
@@ -6203,7 +6314,6 @@ export function initBackpackRuntime(): void {
         const numBranches = cat.branches.length;
         const evo = getEvolutionStage(coreLevel);
         const coreMastery = getMasteryInfo(coreLevel);
-        const constellation = cat.constellation || DOMAIN_CONSTELLATIONS[cat.slug] || DOMAIN_CONSTELLATIONS['engineering'];
 
         if (state.inspectedNodeIdx === undefined || state.inspectedNodeIdx === null || state.inspectedNodeIdx >= cat.nodes.length) {
           state.inspectedNodeIdx = 0;
@@ -6233,168 +6343,108 @@ export function initBackpackRuntime(): void {
           `;
         }
 
-        // Compute active prerequisite & progression lineage for the currently inspected node (P0 #3.1, P1 #4.1, P1 #4.3)
+        // Active prerequisite & progression lineage for currently inspected node
         const lineageInfo = computeSelectedLineageSets(cat, state.inspectedNodeIdx, nodeLevelsMap);
         const highlightLineageActive = !!(state.mapView && state.mapView.highlightLineage);
         const selNodeObj = cat.nodes[state.inspectedNodeIdx] || cat.nodes[0];
 
+        // Defs: Filters, Gradients, and Directional Arrowheads
         let stoneReliefSvg = `
           <defs>
-            <radialGradient id="torchGlowGrad" cx="50%" cy="50%" r="58%">
-              <stop offset="0%" stop-color="#3E2814" stop-opacity="0.78" />
-              <stop offset="55%" stop-color="#1B120C" stop-opacity="0.96" />
-              <stop offset="100%" stop-color="#0B0705" stop-opacity="1" />
+            <radialGradient id="torchGlowGrad" cx="50%" cy="65%" r="75%">
+              <stop offset="0%" stop-color="#24150A" stop-opacity="0.92" />
+              <stop offset="45%" stop-color="#120D08" stop-opacity="0.97" />
+              <stop offset="100%" stop-color="#060403" stop-opacity="1" />
             </radialGradient>
-            <!-- P0 #3.1 & P1 #4.3: Directional Arrow Markers for One-Way Prerequisite Progression -->
-            <marker id="arrowPrereqCyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#38BDF8" />
+            <!-- Prerequisite & Progression Arrowhead Markers -->
+            <marker id="arrowPrereqCyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#22D3EE" />
             </marker>
-            <marker id="arrowPrereqGold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+            <marker id="arrowPrereqGold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FBBF24" />
             </marker>
-            <marker id="arrowPrereqRose" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+            <marker id="arrowPrereqRose" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FB7185" />
             </marker>
             <marker id="arrowPrereqLocked" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
               <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#785C3C" />
             </marker>
-            <linearGradient id="stoneLockedBasaltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2B231D" />
-              <stop offset="55%" stop-color="#1A1410" />
-              <stop offset="100%" stop-color="#0D0A08" />
-            </linearGradient>
-            <linearGradient id="stoneSlateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#5C4430" />
-              <stop offset="50%" stop-color="#3D2C1E" />
-              <stop offset="100%" stop-color="#241911" />
-            </linearGradient>
-            <linearGradient id="stoneSandstoneLv1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#B46934" />
-              <stop offset="55%" stop-color="#85481E" />
-              <stop offset="100%" stop-color="#4A250C" />
-            </linearGradient>
-            <linearGradient id="stoneJadeLv2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#228B6D" />
-              <stop offset="55%" stop-color="#135E48" />
-              <stop offset="100%" stop-color="#083326" />
-            </linearGradient>
-            <linearGradient id="stoneLapisLv3Grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2563EB" />
-              <stop offset="50%" stop-color="#1E3A8A" />
-              <stop offset="100%" stop-color="#0F172A" />
-            </linearGradient>
-            <linearGradient id="stonePorphyryLv4Grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#9333EA" />
-              <stop offset="50%" stop-color="#581C87" />
-              <stop offset="100%" stop-color="#2E1065" />
-            </linearGradient>
-            <linearGradient id="stoneObsidianLv5Grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#450A0A" />
-              <stop offset="50%" stop-color="#1C1917" />
-              <stop offset="100%" stop-color="#090706" />
-            </linearGradient>
-            <radialGradient id="gemBasicGrad" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#A5F3FC" />
-              <stop offset="50%" stop-color="#06B6D4" />
-              <stop offset="100%" stop-color="#164E63" />
-            </radialGradient>
-            <radialGradient id="gemSapphireRoyalGrad" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#F5D0FE" />
-              <stop offset="48%" stop-color="#A855F7" />
-              <stop offset="100%" stop-color="#3B0764" />
-            </radialGradient>
-            <radialGradient id="gemAdvGrad" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#FDE047" />
-              <stop offset="55%" stop-color="#D97706" />
-              <stop offset="100%" stop-color="#78350F" />
-            </radialGradient>
-            <radialGradient id="gemSageGrad" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#FFE4E6" />
-              <stop offset="45%" stop-color="#F43F5E" />
-              <stop offset="100%" stop-color="#881337" />
-            </radialGradient>
-            <radialGradient id="gemMasteryGold" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#FEF08A" />
-              <stop offset="45%" stop-color="#F59E0B" />
-              <stop offset="100%" stop-color="#9A3412" />
-            </radialGradient>
+            <marker id="arrowBranch0" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#F59E0B" />
+            </marker>
+            <marker id="arrowBranch1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#10B981" />
+            </marker>
+            <marker id="arrowBranch2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#0EA5E9" />
+            </marker>
+            <marker id="arrowBranch3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#F43F5E" />
+            </marker>
+            <marker id="arrowBranch4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#A855F7" />
+            </marker>
+            <marker id="arrowBranch5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#F97316" />
+            </marker>
+            <!-- Glowing Neon Filters for Unlocked Organic Conduits -->
+            <filter id="glowAmber" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#F59E0B" flood-opacity="0.82" />
+            </filter>
+            <filter id="glowEmerald" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#10B981" flood-opacity="0.82" />
+            </filter>
+            <filter id="glowCyan" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#0EA5E9" flood-opacity="0.82" />
+            </filter>
+            <filter id="glowRose" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#F43F5E" flood-opacity="0.82" />
+            </filter>
+            <filter id="glowViolet" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#A855F7" flood-opacity="0.82" />
+            </filter>
+            <filter id="glowBronze" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="#F97316" flood-opacity="0.82" />
+            </filter>
             <filter id="medallionShadow" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="4" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.75" />
+              <feDropShadow dx="0" dy="4" stdDeviation="4.0" flood-color="#000000" flood-opacity="0.85" />
             </filter>
           </defs>
           <rect x="-600" y="-480" width="${w + 1200}" height="${h + 960}" fill="url(#torchGlowGrad)" />
-          <rect x="36" y="32" width="${w - 72}" height="${h - 64}" rx="32" fill="none" stroke="#6E5030" stroke-width="1.6" stroke-dasharray="18 10" opacity="0.35" />
-          <line x1="${cx}" y1="48" x2="${cx}" y2="${h - 48}" stroke="#4A3520" stroke-width="1" stroke-dasharray="6 12" opacity="0.18" />
-          <line x1="48" y1="${cy}" x2="${w - 48}" y2="${cy}" stroke="#4A3520" stroke-width="1" stroke-dasharray="6 12" opacity="0.18" />
+          <rect x="36" y="32" width="${w - 72}" height="${h - 64}" rx="32" fill="none" stroke="#6E5030" stroke-width="1.6" stroke-dasharray="18 10" opacity="0.25" />
+          <line x1="${cx}" y1="48" x2="${cx}" y2="${h - 48}" stroke="#4A3520" stroke-width="1" stroke-dasharray="6 12" opacity="0.14" />
         `;
 
-        // P0 #3.3 & P1 #4.1: Safe-Margin Ring Radii inside 1840x1280 so outer nodes & labels NEVER clip at viewport edges!
-        // With rx=205, 365, 525 and ry=150, 268, 385, Tier 3 nodes sit at x in [395..1445] (leaving 395px margin on left & right!).
-        const ringRadii = [
-          { rx: 205, ry: 152, col: '#38BDF8', label: 'RING I · BASIC' },
-          { rx: 365, ry: 270, col: '#F59E0B', label: 'RING II · ADVANCED (Basic ≥ 3)' },
-          { rx: 525, ry: 388, col: '#FB7185', label: 'RING III · SAGE (Adv ≥ 4)' }
-        ];
-        let coreRings = '';
-        ringRadii.forEach((rg) => {
-          coreRings += `
-            <ellipse cx="${cx}" cy="${cy}" rx="${rg.rx}" ry="${rg.ry}" fill="none" stroke="${rg.col}" stroke-width="1.2" stroke-dasharray="8 10" opacity="0.18" />
-          `;
-        });
-
-        const rawAngles = cat.branches.map((_, bIdx) => {
-          return (constellation.branchAnglesDeg && constellation.branchAnglesDeg[bIdx] !== undefined)
-            ? constellation.branchAnglesDeg[bIdx]
-            : (-90 + (bIdx / numBranches) * 360);
-        });
-        let minAngDiff = 360;
-        for (let i = 0; i < rawAngles.length; i++) {
-          for (let j = i + 1; j < rawAngles.length; j++) {
-            let d = Math.abs(rawAngles[i] - rawAngles[j]) % 360;
-            if (d > 180) d = 360 - d;
-            if (d < minAngDiff) minAngDiff = d;
-          }
-        }
-        const safeAnglesDeg = minAngDiff < 48
-          ? cat.branches.map((_, bIdx) => -90 + (bIdx / numBranches) * 360)
-          : rawAngles;
-
+        // 1. Calculate Node Coordinates & Branch Bases in Ascending Organic Tree
         const nodeCoords = [];
+        const branchBases = [];
+
         cat.branches.forEach((branch, bIdx) => {
-          const angle = (safeAnglesDeg[bIdx] * Math.PI) / 180;
-          const rScales = (constellation.tierRadiusScale && constellation.tierRadiusScale[bIdx]) || [1.0, 1.0, 1.0];
+          const palette = BRANCH_PALETTES[bIdx % BRANCH_PALETTES.length];
+          const baseX = getBranchBaseX(bIdx, numBranches);
+          const baseY = 1010;
+          const dx = baseX - cx;
 
-          // Outer Branch Banner placed at safe radius (rx=668, ry=492) and clamped inside safe frame!
-          const rawRimX = cx + Math.cos(angle) * 668;
-          const rawRimY = cy + Math.sin(angle) * 492;
-          const rimX = Math.max(135, Math.min(w - 135, rawRimX));
-          const rimY = Math.max(62, Math.min(h - 68, rawRimY));
+          branchBases.push({ bIdx, branch, baseX, baseY, palette });
 
-          const bNodes = [0, 1, 2].map(ti => bIdx * 3 + ti);
-          const bStars = bNodes.reduce((acc, fi) => {
-            const g = evaluateNodeUnlockGate(cat.slug, fi, nodeLevelsMap);
-            const v = g.unlocked ? (nodeLevelsMap[fi] || 0) : 0;
-            return acc + v;
-          }, 0);
-          const isBranchMastered = bStars >= 11;
-          const isBranchSelected = selNodeObj && selNodeObj.branchIdx === bIdx;
-          const branchDimClass = (highlightLineageActive && !isBranchSelected && !bNodes.some(fi => lineageInfo.lineageNodes.has(fi))) ? 'map-branch-dimmed' : '';
+          const t1X = baseX - dx * 0.10;
+          const t1Y = 820;
 
-          coreRings += `
-            <g transform="translate(${rimX.toFixed(1)}, ${rimY.toFixed(1)})" class="${branchDimClass}">
-              <rect x="-98" y="-15" width="196" height="30" rx="9" fill="${isBranchMastered ? '#422006' : '#18110B'}" stroke="${isBranchSelected ? '#38BDF8' : (isBranchMastered ? '#FDE047' : '#8C673E')}" stroke-width="${isBranchSelected ? '2.2' : '1.5'}" filter="url(#medallionShadow)" />
-              <text x="0" y="4" text-anchor="middle" fill="${isBranchMastered ? '#FEF08A' : '#FFF8EB'}" font-family="ui-monospace, monospace" font-size="10.5" font-weight="extrabold">${isBranchMastered ? '👑 ' : '✦ '}${escapeHtml(branch.name.toUpperCase())} (${bStars}/15)</text>
-            </g>
-          `;
+          const t2X = baseX;
+          const t2Y = 500;
+
+          const t3X = baseX + dx * 0.08;
+          const t3Y = 190;
+
+          const tierPos = [
+            { x: t1X, y: t1Y },
+            { x: t2X, y: t2Y },
+            { x: t3X, y: t3Y }
+          ];
 
           [0, 1, 2].forEach(tIdx => {
             const flatIdx = bIdx * 3 + tIdx;
             const node = cat.nodes[flatIdx];
-            const rg = ringRadii[tIdx];
-            const rawScale = rScales[tIdx] || 1.0;
-            const scaleM = Math.max(0.95, Math.min(1.04, rawScale));
-            const nx = Math.max(155, Math.min(w - 155, cx + Math.cos(angle) * rg.rx * scaleM));
-            const ny = Math.max(92, Math.min(h - 115, cy + Math.sin(angle) * rg.ry * scaleM));
             const gate = evaluateNodeUnlockGate(cat.slug, flatIdx, nodeLevelsMap);
             const lvl = gate.unlocked && nodeLevelsMap && nodeLevelsMap[flatIdx] !== undefined ? nodeLevelsMap[flatIdx] : null;
             nodeCoords[flatIdx] = {
@@ -6402,42 +6452,16 @@ export function initBackpackRuntime(): void {
               node,
               bIdx,
               tIdx,
-              angle,
-              x: nx,
-              y: ny,
+              x: Math.max(120, Math.min(w - 120, tierPos[tIdx].x)),
+              y: Math.max(80, Math.min(h - 90, tierPos[tIdx].y)),
               gate,
               lvl
             };
           });
         });
 
-        // Automatic Collision-Avoidance Pass + Safe Boundary Clamping (P0 #3.3)
-        for (let pass = 0; pass < 4; pass++) {
-          for (let i = 0; i < nodeCoords.length; i++) {
-            for (let j = i + 1; j < nodeCoords.length; j++) {
-              const a = nodeCoords[i];
-              const b = nodeCoords[j];
-              if (!a || !b) continue;
-              const dx = b.x - a.x;
-              const dy = b.y - a.y;
-              const dist = Math.hypot(dx, dy);
-              const minDist = 146;
-              if (dist > 0.1 && dist < minDist) {
-                const push = (minDist - dist) * 0.52;
-                const ux = dx / dist;
-                const uy = dy / dist;
-                a.x = Math.max(155, Math.min(w - 155, a.x - ux * push));
-                a.y = Math.max(92, Math.min(h - 115, a.y - uy * push));
-                b.x = Math.max(155, Math.min(w - 155, b.x + ux * push));
-                b.y = Math.max(92, Math.min(h - 115, b.y + uy * push));
-              }
-            }
-          }
-        }
-
         state.lastNodeCoords = nodeCoords;
 
-        // Helper to shorten line end so directional arrowhead sits right outside the target stone's rim
         function shortenSegment(x1, y1, x2, y2, padStart, padEnd) {
           const dx = x2 - x1;
           const dy = y2 - y1;
@@ -6453,73 +6477,93 @@ export function initBackpackRuntime(): void {
           };
         }
 
-        // 0. Subtle Constellation Silhouette Web (P0 #3.1 & P1 #4.1: Kept calm & dotted so it never competes with prerequisite paths!)
-        let constellationWebSvg = '';
-        if (Array.isArray(constellation.constellationLines)) {
-          constellation.constellationLines.forEach(pair => {
-            const nA = nodeCoords[pair[0]];
-            const nB = nodeCoords[pair[1]];
-            if (!nA || !nB) return;
-            constellationWebSvg += `
-              <line x1="${nA.x.toFixed(1)}" y1="${nA.y.toFixed(1)}" x2="${nB.x.toFixed(1)}" y2="${nB.y.toFixed(1)}"
-                    stroke="#8C673E"
-                    stroke-width="1.3"
-                    stroke-dasharray="2 8"
-                    opacity="${highlightLineageActive ? '0.14' : '0.24'}" />
-            `;
-          });
-        }
-
-        // 1. Radial Branch Prerequisite Conduits with Directional Arrowheads & Lineage Highlighting (P0 #3.1, P1 #4.3)
-        let groovesSvg = '';
-        cat.branches.forEach((_, bIdx) => {
+        // 2. Thick Glowing Ascending Conduits (Trunk -> Branch Base -> Tier 1 -> Loop -> Tier 2 -> Keystone)
+        let conduitsSvg = '';
+        cat.branches.forEach((branch, bIdx) => {
+          const palette = BRANCH_PALETTES[bIdx % BRANCH_PALETTES.length];
+          const bb = branchBases[bIdx];
           const n1 = nodeCoords[bIdx * 3 + 0];
           const n2 = nodeCoords[bIdx * 3 + 1];
           const n3 = nodeCoords[bIdx * 3 + 2];
+
           const isSameBranchAsSel = selNodeObj && selNodeObj.branchIdx === bIdx;
           const branchRelevant = isSameBranchAsSel || [n1.flatIdx, n2.flatIdx, n3.flatIdx].some(fi => lineageInfo.lineageNodes.has(fi));
           const dimEdgeClass = (highlightLineageActive && !branchRelevant) ? 'map-branch-dimmed' : '';
           const hiEdgeClass = (highlightLineageActive && isSameBranchAsSel) ? 'map-edge-highlighted' : '';
 
-          // Segment 1: Core Medallion -> Tier 1 (Basic, always open)
-          const seg1 = shortenSegment(cx, cy, n1.x, n1.y, 58, 36);
-          groovesSvg += `
+          // Segment 0: Trunk (Root Totem top to Branch Base bottom)
+          const rootTopY = 1115;
+          const trunkD = `M ${cx} ${rootTopY} C ${cx} ${(rootTopY + bb.baseY + 34) * 0.5}, ${bb.baseX.toFixed(1)} 1080, ${bb.baseX.toFixed(1)} ${(bb.baseY + 34).toFixed(1)}`;
+          conduitsSvg += `
             <g class="${dimEdgeClass} ${hiEdgeClass}">
-              <line x1="${seg1.sx.toFixed(1)}" y1="${seg1.sy.toFixed(1)}" x2="${seg1.ex.toFixed(1)}" y2="${seg1.ey.toFixed(1)}" stroke="#090604" stroke-width="7.5" stroke-linecap="round" />
-              <line x1="${seg1.sx.toFixed(1)}" y1="${seg1.sy.toFixed(1)}" x2="${seg1.ex.toFixed(1)}" y2="${seg1.ey.toFixed(1)}" stroke="#38BDF8" stroke-width="3.4" marker-end="url(#arrowPrereqCyan)" />
+              <path d="${trunkD}" fill="none" stroke="#090604" stroke-width="12" stroke-linecap="round" />
+              <path d="${trunkD}" fill="none" stroke="${palette.primary}" stroke-width="6.5" stroke-linecap="round" filter="url(#${palette.filterId})" />
             </g>
           `;
 
-          // Segment 2: Tier 1 (Basic) -> Tier 2 (Advanced, requires Basic >= 3/5)
+          // Segment 1: Branch Base top to Tier 1 bottom
+          const stemD = `M ${bb.baseX.toFixed(1)} ${(bb.baseY - 34).toFixed(1)} C ${bb.baseX.toFixed(1)} 920, ${n1.x.toFixed(1)} 880, ${n1.x.toFixed(1)} ${(n1.y + 26).toFixed(1)}`;
+          conduitsSvg += `
+            <g class="${dimEdgeClass} ${hiEdgeClass}">
+              <path d="${stemD}" fill="none" stroke="#090604" stroke-width="12" stroke-linecap="round" />
+              <path d="${stemD}" fill="none" stroke="${palette.primary}" stroke-width="6.5" stroke-linecap="round" filter="url(#${palette.filterId})" />
+            </g>
+          `;
+
+          // Segment 2: Tier 1 to Tier 2 Loop / Diamond dual conduit bypass
           const g2Open = n2.gate.unlocked;
-          const seg2 = shortenSegment(n1.x, n1.y, n2.x, n2.y, 32, 38);
-          groovesSvg += `
-            <g class="${dimEdgeClass} ${hiEdgeClass}">
-              <line x1="${seg2.sx.toFixed(1)}" y1="${seg2.sy.toFixed(1)}" x2="${seg2.ex.toFixed(1)}" y2="${seg2.ey.toFixed(1)}" stroke="#090604" stroke-width="7.5" stroke-linecap="round" />
-              <line x1="${seg2.sx.toFixed(1)}" y1="${seg2.sy.toFixed(1)}" x2="${seg2.ex.toFixed(1)}" y2="${seg2.ey.toFixed(1)}"
-                    stroke="${g2Open ? '#FBBF24' : '#785C3C'}"
-                    stroke-width="${g2Open ? '3.6' : '2.2'}"
-                    stroke-dasharray="${g2Open ? 'none' : '7 5'}"
-                    marker-end="url(#${g2Open ? 'arrowPrereqGold' : 'arrowPrereqLocked'})" />
-            </g>
-          `;
+          const midY = (n1.y - 26 + n2.y + 30) * 0.5;
+          const midX = (n1.x + n2.x) * 0.5;
+          const loopHW = 38;
 
-          // Segment 3: Tier 2 (Advanced) -> Tier 3 (Sage, requires Advanced >= 4/5 + cross prereqs)
+          const arcLeftD = `M ${n1.x.toFixed(1)} ${(n1.y - 26).toFixed(1)} C ${(n1.x - loopHW).toFixed(1)} ${(n1.y - 85).toFixed(1)}, ${(midX - loopHW).toFixed(1)} ${(midY + 45).toFixed(1)}, ${(midX - loopHW).toFixed(1)} ${midY.toFixed(1)} C ${(midX - loopHW).toFixed(1)} ${(midY - 45).toFixed(1)}, ${(n2.x - loopHW).toFixed(1)} ${(n2.y + 85).toFixed(1)}, ${n2.x.toFixed(1)} ${(n2.y + 30).toFixed(1)}`;
+          const arcRightD = `M ${n1.x.toFixed(1)} ${(n1.y - 26).toFixed(1)} C ${(n1.x + loopHW).toFixed(1)} ${(n1.y - 85).toFixed(1)}, ${(midX + loopHW).toFixed(1)} ${(midY + 45).toFixed(1)}, ${(midX + loopHW).toFixed(1)} ${midY.toFixed(1)} C ${(midX + loopHW).toFixed(1)} ${(midY - 45).toFixed(1)}, ${(n2.x + loopHW).toFixed(1)} ${(n2.y + 85).toFixed(1)}, ${n2.x.toFixed(1)} ${(n2.y + 30).toFixed(1)}`;
+
+          if (g2Open) {
+            conduitsSvg += `
+              <g class="${dimEdgeClass} ${hiEdgeClass}">
+                <path d="${arcLeftD}" fill="none" stroke="#090604" stroke-width="11" stroke-linecap="round" />
+                <path d="${arcRightD}" fill="none" stroke="#090604" stroke-width="11" stroke-linecap="round" />
+                <path d="${arcLeftD}" fill="none" stroke="${palette.primary}" stroke-width="6.0" stroke-linecap="round" filter="url(#${palette.filterId})" />
+                <path d="${arcRightD}" fill="none" stroke="${palette.primary}" stroke-width="6.0" stroke-linecap="round" filter="url(#${palette.filterId})" />
+                <!-- Center Resonance Loop Node -->
+                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="7" fill="#120E0A" stroke="${palette.primary}" stroke-width="2" />
+                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="2.8" fill="${palette.glow}" />
+              </g>
+            `;
+          } else {
+            conduitsSvg += `
+              <g class="${dimEdgeClass} ${hiEdgeClass}">
+                <path d="${arcLeftD}" fill="none" stroke="#090604" stroke-width="9" stroke-linecap="round" />
+                <path d="${arcRightD}" fill="none" stroke="#090604" stroke-width="9" stroke-linecap="round" />
+                <path d="${arcLeftD}" fill="none" stroke="#2B2018" stroke-width="4.5" stroke-dasharray="7 5" opacity="0.75" />
+                <path d="${arcRightD}" fill="none" stroke="#2B2018" stroke-width="4.5" stroke-dasharray="7 5" opacity="0.75" />
+                <circle cx="${midX.toFixed(1)}" cy="${midY.toFixed(1)}" r="5" fill="#140E0A" stroke="#4A3522" stroke-width="1.6" />
+              </g>
+            `;
+          }
+
+          // Segment 3: Tier 2 to Tier 3 Crown Ascending Conduit
           const g3Open = n3.gate.unlocked;
-          const seg3 = shortenSegment(n2.x, n2.y, n3.x, n3.y, 34, 40);
-          groovesSvg += `
-            <g class="${dimEdgeClass} ${hiEdgeClass}">
-              <line x1="${seg3.sx.toFixed(1)}" y1="${seg3.sy.toFixed(1)}" x2="${seg3.ex.toFixed(1)}" y2="${seg3.ey.toFixed(1)}" stroke="#090604" stroke-width="7.5" stroke-linecap="round" />
-              <line x1="${seg3.sx.toFixed(1)}" y1="${seg3.sy.toFixed(1)}" x2="${seg3.ex.toFixed(1)}" y2="${seg3.ey.toFixed(1)}"
-                    stroke="${g3Open ? '#FB7185' : '#785C3C'}"
-                    stroke-width="${g3Open ? '3.8' : '2.2'}"
-                    stroke-dasharray="${g3Open ? 'none' : '7 5'}"
-                    marker-end="url(#${g3Open ? 'arrowPrereqRose' : 'arrowPrereqLocked'})" />
-            </g>
-          `;
+          const stem3D = `M ${n2.x.toFixed(1)} ${(n2.y - 30).toFixed(1)} C ${n2.x.toFixed(1)} ${(n2.y - 95).toFixed(1)}, ${n3.x.toFixed(1)} ${(n3.y + 95).toFixed(1)}, ${n3.x.toFixed(1)} ${(n3.y + 35).toFixed(1)}`;
+          if (g3Open) {
+            conduitsSvg += `
+              <g class="${dimEdgeClass} ${hiEdgeClass}">
+                <path d="${stem3D}" fill="none" stroke="#090604" stroke-width="12" stroke-linecap="round" />
+                <path d="${stem3D}" fill="none" stroke="${palette.primary}" stroke-width="6.8" stroke-linecap="round" filter="url(#${palette.filterId})" marker-end="url(#${palette.arrowId})" />
+              </g>
+            `;
+          } else {
+            conduitsSvg += `
+              <g class="${dimEdgeClass} ${hiEdgeClass}">
+                <path d="${stem3D}" fill="none" stroke="#090604" stroke-width="9" stroke-linecap="round" />
+                <path d="${stem3D}" fill="none" stroke="#2B2018" stroke-width="4.5" stroke-dasharray="7 5" opacity="0.75" marker-end="url(#arrowPrereqLocked)" />
+              </g>
+            `;
+          }
         });
 
-        // 2. Cross-Branch Prerequisite Curves with Directional Arrowheads
+        // 3. Cross-Branch Prerequisite Conduits
         nodeCoords.forEach(nc => {
           if (Array.isArray(nc.node.crossPrereqs)) {
             nc.node.crossPrereqs.forEach(cp => {
@@ -6529,29 +6573,52 @@ export function initBackpackRuntime(): void {
               const srcScore = src.gate.unlocked ? src.lvl : null;
               const satisfied = typeof srcScore === 'number' && srcScore >= cp.minScore;
               const isSelectedCrossEdge = (nc.flatIdx === state.inspectedNodeIdx || srcIdx === state.inspectedNodeIdx);
-              if (highlightLineageActive && !isSelectedCrossEdge) {
-                // Keep non-selected cross-branch curves very subtle so they don't clutter the canvas (P1 #4.1)
-                return;
-              }
-              const ctrlX = (src.x + nc.x) * 0.5 + (cx - (src.x + nc.x) * 0.5) * 0.25;
-              const ctrlY = (src.y + nc.y) * 0.5 + (cy - (src.y + nc.y) * 0.5) * 0.25;
-              const endSeg = shortenSegment(ctrlX, ctrlY, nc.x, nc.y, 0, 38);
-              groovesSvg += `
+              if (highlightLineageActive && !isSelectedCrossEdge) return;
+
+              const ctrlX = (src.x + nc.x) * 0.5;
+              const ctrlY = Math.min(src.y, nc.y) - 65;
+              const targetR = nc.tIdx === 2 ? 35 : (nc.tIdx === 1 ? 30 : 26);
+              const endSeg = shortenSegment(ctrlX, ctrlY, nc.x, nc.y, 0, targetR + 6);
+
+              conduitsSvg += `
                 <g class="${isSelectedCrossEdge ? 'map-edge-highlighted' : ''}">
                   <path d="M ${src.x.toFixed(1)} ${src.y.toFixed(1)} Q ${ctrlX.toFixed(1)} ${ctrlY.toFixed(1)} ${endSeg.ex.toFixed(1)} ${endSeg.ey.toFixed(1)}"
                         fill="none"
                         stroke="${satisfied ? '#22D3EE' : '#F59E0B'}"
-                        stroke-width="${isSelectedCrossEdge ? '3.2' : '2.0'}"
+                        stroke-width="${isSelectedCrossEdge ? '3.5' : '2.4'}"
                         stroke-dasharray="${satisfied ? 'none' : '8 5'}"
                         marker-end="url(#${satisfied ? 'arrowPrereqCyan' : 'arrowPrereqGold'})"
-                        opacity="${isSelectedCrossEdge ? '0.96' : '0.55'}" />
+                        opacity="${isSelectedCrossEdge ? '0.96' : '0.62'}" />
                 </g>
               `;
             });
           }
         });
 
-        // 3. Textured Stone & Gemstone Nodes
+        // 4. Branch Base Totems with Big Score Numbers
+        let branchBasesSvg = '';
+        cat.branches.forEach((branch, bIdx) => {
+          const bb = branchBases[bIdx];
+          const palette = bb.palette;
+          const bNodes = [0, 1, 2].map(ti => bIdx * 3 + ti);
+          const bStars = bNodes.reduce((acc, fi) => {
+            const g = evaluateNodeUnlockGate(cat.slug, fi, nodeLevelsMap);
+            return acc + (g.unlocked ? (nodeLevelsMap[fi] || 0) : 0);
+          }, 0);
+          const isBranchMastered = bStars >= 11;
+          const isBranchSelected = selNodeObj && selNodeObj.branchIdx === bIdx;
+          const branchDimClass = (highlightLineageActive && !isBranchSelected && !bNodes.some(fi => lineageInfo.lineageNodes.has(fi))) ? 'map-branch-dimmed' : '';
+
+          branchBasesSvg += `
+            <g transform="translate(${bb.baseX.toFixed(1)}, ${bb.baseY.toFixed(1)})" class="${branchDimClass}">
+              <rect x="-95" y="-32" width="190" height="64" rx="14" fill="#120D09" stroke="${isBranchSelected ? '#38BDF8' : (isBranchMastered ? palette.glow : palette.dark)}" stroke-width="${isBranchSelected ? '2.4' : '1.5'}" filter="url(#medallionShadow)" />
+              <text x="0" y="-12" text-anchor="middle" fill="${palette.primary}" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="900" letter-spacing="1.2">${escapeHtml(branch.name.toUpperCase())}</text>
+              <text x="0" y="18" text-anchor="middle" fill="${isBranchMastered ? '#FEF08A' : palette.glow}" font-family="ui-monospace, monospace" font-size="22" font-weight="900">${isBranchMastered ? '👑 ' : '★ '}${bStars}/15</text>
+            </g>
+          `;
+        });
+
+        // 5. Circular Milestone Nodes
         let nodesSvg = '';
         nodeCoords.forEach(nc => {
           const isUnlocked = nc.gate.unlocked;
@@ -6562,18 +6629,18 @@ export function initBackpackRuntime(): void {
           nodesSvg += buildTexturedStoneNodeSvg(nc, isUnlocked, isAssessed, isInspected, prereqInfo, isLineageRelevant, highlightLineageActive);
         });
 
-        // 4. Central Core Domain Stone Medallion (P0 #2.1: Clear Domain vs Core Level Hierarchy)
+        // 6. Central Root Domain Totem Medallion at Bottom
         const coreUnlocked = coreLevel !== null;
         const coreBorder = coreUnlocked ? coreMastery.barColor : '#A8763E';
         const coreSvg = `
           <g filter="url(#medallionShadow)" class="cursor-pointer" data-core-medallion="true">
-            <title>Inti Domain: ${escapeHtml(cat.name)} (${coreUnlocked ? 'Level ' + coreLevel + '/5 · ' + coreMastery.label : 'Belum Dinilai'}) — Klik untuk Fokus Inti</title>
-            <polygon points="${cx},${cy - 62} ${cx + 44},${cy - 44} ${cx + 62},${cy} ${cx + 44},${cy + 44} ${cx},${cy + 62} ${cx - 44},${cy + 44} ${cx - 62},${cy} ${cx - 44},${cy - 44}" fill="url(#stoneSlateGrad)" stroke="${coreBorder}" stroke-width="4.4" />
-            <circle cx="${cx}" cy="${cy}" r="45" fill="#18100A" stroke="#F59E0B" stroke-width="1.8" stroke-dasharray="6 4" />
-            <text x="${cx}" y="${cy - 14}" text-anchor="middle" fill="#A89984" font-family="ui-monospace, monospace" font-size="8.5" font-weight="bold">INTI DOMAIN</text>
-            <text x="${cx}" y="${cy + 2}" text-anchor="middle" fill="#FFF8EB" font-family="Plus Jakarta Sans, sans-serif" font-size="13.5" font-weight="extrabold">${escapeHtml(cat.shortTag.toUpperCase())}</text>
-            <text x="${cx}" y="${cy + 19}" text-anchor="middle" fill="#FDE047" font-family="ui-monospace, monospace" font-size="12" font-weight="extrabold">${coreUnlocked ? '★ Lv.' + coreLevel + '/5' : 'Belum Dinilai'}</text>
-            <text x="${cx}" y="${cy + 33}" text-anchor="middle" fill="#F59E0B" font-family="ui-monospace, monospace" font-size="9" font-weight="bold">${evo.shortBadge}</text>
+            <title>Inti Domain: ${escapeHtml(cat.name)} (${coreUnlocked ? 'Level ' + coreLevel + '/5 · ' + coreMastery.label : 'Belum Dinilai'}) — Klik untuk Reset Tampilan</title>
+            <circle cx="${cx}" cy="1165" r="50" fill="#150E0A" stroke="${coreBorder}" stroke-width="4.0" />
+            <circle cx="${cx}" cy="1165" r="42" fill="#1C140E" stroke="#F59E0B" stroke-width="1.6" stroke-dasharray="6 4" />
+            <text x="${cx}" y="${1165 - 15}" text-anchor="middle" fill="#A89984" font-family="ui-monospace, monospace" font-size="8.5" font-weight="bold">INTI DOMAIN</text>
+            <text x="${cx}" y="${1165 + 2}" text-anchor="middle" fill="#FFF8EB" font-family="Plus Jakarta Sans, sans-serif" font-size="14" font-weight="extrabold">${escapeHtml(cat.shortTag.toUpperCase())}</text>
+            <text x="${cx}" y="${1165 + 18}" text-anchor="middle" fill="#FDE047" font-family="ui-monospace, monospace" font-size="12" font-weight="extrabold">${coreUnlocked ? '★ Lv.' + coreLevel + '/5' : 'Belum Dinilai'}</text>
+            <text x="${cx}" y="${1165 + 32}" text-anchor="middle" fill="#F59E0B" font-family="ui-monospace, monospace" font-size="9" font-weight="bold">${evo.shortBadge}</text>
           </g>
         `;
 
@@ -6581,9 +6648,8 @@ export function initBackpackRuntime(): void {
           <svg id="prasastiSkillMapSvg" viewBox="0 0 ${w} ${h}" class="w-full h-full select-none">
             <g id="prasastiPanZoomGroup">
               ${stoneReliefSvg}
-              ${coreRings}
-              ${constellationWebSvg}
-              ${groovesSvg}
+              ${conduitsSvg}
+              ${branchBasesSvg}
               ${coreSvg}
               ${nodesSvg}
             </g>
